@@ -9,14 +9,14 @@
 class MockCallHandler {
     
     var functionCallsCounts = [String: Int]()
-    var functionCallsArguments = [String: [[Any?]?]]()
+    var functionCallsArguments = [String: [[Any?]]]()
     var stubbedReturns = [String: Any]()
 
     var expectingFunctionCall = false
 
     private var lastCalledFunctionName = ""
     
-    private var lastCalledFunction: (functionName: String, calledArguments: [Any?]?) {
+    private var lastCalledFunction: (functionName: String, calledArguments: [Any?]) {
         unregisterLastCall()
         let callArguments = lastCallArguments(lastCalledFunctionName)
         
@@ -27,21 +27,23 @@ class MockCallHandler {
         return (functionName: lastCalledFunctionName, calledArguments: callArguments)
     }
     
-    private func getFunctionDescription(fun: () -> ()) -> (functionName: String, calledArguments: [Any?]?) {
+    private func getFunctionDescription(fun: () -> ()) throws -> (functionName: String, calledArguments: [Any?]) {
         expectingFunctionCall = true
         fun()
         if (expectingFunctionCall) {
-            
+            throw MockVerificationError.MethodNotMocked
         }
 
         return lastCalledFunction
     }
     
-    func registerCall(returnValue: Any? = nil, args: [Any?]? = nil, callName: String = __FUNCTION__) -> Any? {
+    func registerCall(returnValue: Any? = nil, args: [Any?] = [], callName: String = __FUNCTION__) -> Any? {
+        expectingFunctionCall = false
+        
         lastCalledFunctionName = callName
         
-        if let r = functionCallsArguments[callName] {
-            functionCallsArguments.updateValue(r + [args], forKey: callName)
+        if let prevArgs = functionCallsArguments[callName] {
+            functionCallsArguments.updateValue(prevArgs + [args], forKey: callName)
         } else {
             functionCallsArguments.updateValue([args], forKey: callName)
         }
@@ -67,38 +69,39 @@ class MockCallHandler {
         }
     }
     
-    private func lastCallArguments(funcName: String) -> [Any?]? {
+    private func lastCallArguments(funcName: String) -> [Any?] {
         if let prevFuncArguments = functionCallsArguments[lastCalledFunctionName] {
             if prevFuncArguments.count > 0 {
-                let arguments = functionCallsArguments[lastCalledFunctionName]?.removeLast()
-                if functionCallsArguments[lastCalledFunctionName]?.count == 0 {
-                    functionCallsArguments.removeValueForKey(lastCalledFunctionName)
+                if let arguments = functionCallsArguments[lastCalledFunctionName]?.removeLast() {
+                    if functionCallsArguments[lastCalledFunctionName]?.count == 0 {
+                        functionCallsArguments.removeValueForKey(lastCalledFunctionName)
+                    }
+                    return arguments
                 }
-                return arguments
             }
         }
-        return nil
+        return []
     }
     
-    func verify(callsCount: Int, fun: () -> ()) {
-        let callName = getFunctionDescription(fun).functionName
+    func verify(expectedCallCount: Int, fun: () -> ()) throws {
+        let callName = try getFunctionDescription(fun).functionName
         
-        verify(callName)
+        let actualCallCount = functionCallsCounts[callName] ?? 0
         
-        if let calls = functionCallsCounts[callName] {
-            XCTAssertEqual(calls, callsCount)
+        if expectedCallCount != actualCallCount {
+            throw MockVerificationError.MethodCallCountMismatch(actualCallCount, expectedCallCount)
         }
     }
     
     func verify(fun: () -> ()) throws  {
-        let functionName = getFunctionDescription(fun).functionName
+        let functionName = try getFunctionDescription(fun).functionName
         if functionCallsCounts[functionName] == nil {
             throw MockVerificationError.MethodNotCalled
         }
     }
     
-    func verifyArguments(fun: () -> (), comparator: (Any, Any) -> Bool) {
-        let function = getFunctionDescription(fun)
+    func verifyArguments(comparator: (Any, Any) -> Bool, fun: () -> ()) throws {
+        let function = try getFunctionDescription(fun)
         
         if let prevFuncArguments = functionCallsArguments[function.functionName] {
             var matchFound = false
@@ -106,21 +109,29 @@ class MockCallHandler {
             for args in prevFuncArguments {
                 matchFound = matcher.matchArrays(args, function.calledArguments)
             }
-            XCTAssertTrue(matchFound)
+            
+            if !matchFound {
+                throw MockVerificationError.ArgumentsMismatch(prevFuncArguments, function.calledArguments)
+            }
         }
         else
         {
-            XCTFail()
+            throw MockVerificationError.MethodNotCalled
         }
     }
     
-    private func verify(callName: String) {
-        XCTAssertNotNil(functionCallsCounts[callName])
-    }
-    
-    func reject(fun: () -> ()) {
-        let callName = getFunctionDescription(fun).functionName
-        XCTAssertNil(functionCallsCounts[callName])
+    func reject(fun: () -> ()) throws {
+        var success = false
+        
+        do {
+            try verify(fun)
+        } catch {
+            success = true
+        }
+        
+        if !success {
+            throw MockVerificationError.MethodWasCalled
+        }
     }
     
     func stubMethod(method: () -> (), andReturnValue returnValue: Any?) {
@@ -133,4 +144,8 @@ class MockCallHandler {
 
 enum MockVerificationError: ErrorType {
     case MethodNotCalled
+    case MethodWasCalled
+    case MethodCallCountMismatch(Int, Int)
+    case ArgumentsMismatch([[Any?]], [Any?])
+    case MethodNotMocked
 }

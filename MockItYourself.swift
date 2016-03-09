@@ -6,50 +6,86 @@
 //  Copyright © 2016 Plain Vanilla Games. All rights reserved.
 //
 
-protocol Mock {
+protocol MockItYourself {
     var callHandler: MockCallHandler { get }
     
-    func verify(callsCount: Int, fun: () -> ())
+    func verify(expectedCallCount: Int, fun: () -> ()) throws
     
     func verify(fun: () -> ()) throws
     
-    func verifyArguments(fun: () -> ())
+    func verifyArguments(fun: () -> ()) throws
     
-    func verifyArguments(fun: () -> (), comparator: (Any, Any) -> Bool)
+    func verifyArguments(comparator: (Any, Any) -> Bool, fun: () -> ()) throws
     
-    func reject(fun: () -> ())
+    func reject(fun: () -> ()) throws
     
     func stubMethod(method: () -> (), andReturnValue returnValue: Any?)
 }
 
-extension Mock {
-    func verify(callsCount: Int, fun: () -> ()) {
-        callHandler.verify(callsCount, fun: fun)
+extension MockItYourself {
+    func verify(expectedCallCount: Int, fun: () -> ()) throws {
+        try callHandler.verify(expectedCallCount, fun: fun)
     }
     
     func verify(fun: () -> ()) throws {
         try callHandler.verify(fun)
     }
     
-    func verifyArguments(fun: () -> ()) {
-        self.verifyArguments(fun, comparator: { first, second in
+    func verifyArguments(fun: () -> ()) throws {
+        try self.verifyArguments({ first, second in
             if let f = first as? AnyObject, let s = second as? AnyObject {
                 return f === s
             } else {
                 return false
             }
-        })
+        }, fun: fun)
     }
     
-    func verifyArguments(fun: () -> (), comparator: (Any, Any) -> Bool) {
-        callHandler.verifyArguments(fun, comparator: comparator)
+    func verifyArguments(comparator: (Any, Any) -> Bool, fun: () -> ()) throws {
+        try callHandler.verifyArguments(comparator, fun: fun)
     }
     
-    func reject(fun: () -> ()) {
-        callHandler.reject(fun)
+    func reject(fun: () -> ()) throws {
+        try callHandler.reject(fun)
     }
     
     func stubMethod(method: () -> (), andReturnValue returnValue: Any?) {
         callHandler.stubMethod(method, andReturnValue: returnValue)
+    }
+}
+
+func verify(mock: MockItYourself, message: String = "", file: String = __FILE__, line: UInt = __LINE__, verify: () -> ())
+{
+    do {
+        try mock.verify(verify)
+    } catch let error {
+        XCTFail("\(error)", file:  file, line: line)
+    }
+}
+
+func verify(mock: MockItYourself, message: String = "", file: String = __FILE__, line: UInt = __LINE__, expectedCallCount: Int, verify: () -> ())
+{
+    do {
+        try mock.verify(expectedCallCount, fun: verify)
+    } catch let error {
+        XCTFail("\(error)", file:  file, line: line)
+    }
+}
+
+func verifyArguments(mock: MockItYourself, message: String = "", file: String = __FILE__, line: UInt = __LINE__, verify: () -> ())
+{
+    do {
+        try mock.verifyArguments(verify)
+    } catch let error {
+        XCTFail("\(error)", file:  file, line: line)
+    }
+}
+
+func reject(mock: MockItYourself, message: String = "", file: String = __FILE__, line: UInt = __LINE__, reject: () -> ())
+{
+    do {
+        try mock.reject(reject)
+    } catch let error {
+        XCTFail("\(error)", file:  file, line: line)
     }
 }
