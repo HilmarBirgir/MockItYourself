@@ -37,7 +37,7 @@ class MockCallHandler {
         return lastCalledFunction
     }
     
-    func registerCall(returnValue: Any? = nil, args: [Any?] = [], callName: String = __FUNCTION__) -> Any? {
+    func registerCall(returnValue returnValue: Any? = nil, args: [Any?] = [], callName: String = __FUNCTION__) -> Any? {
         expectingFunctionCall = false
         
         lastCalledFunctionName = callName

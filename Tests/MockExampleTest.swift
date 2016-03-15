@@ -6,6 +6,8 @@
 //  Copyright © 2016 Plain Vanilla Games. All rights reserved.
 //
 
+import XCTest
+
 protocol ExampleProtocol {
     
     var property: String { get }
@@ -22,13 +24,13 @@ class MockExampleProtocolImplementation: ExampleProtocol, MockItYourself {
     static let defaultReturnValue = "default return value"
     
     var property: String {
-        return callHandler.registerCall(MockExampleProtocolImplementation.defaultReturnValue) as! String
+        return callHandler.registerCall(returnValue: MockExampleProtocolImplementation.defaultReturnValue) as! String
     }
     
     let callHandler = MockCallHandler()
     
     func buildAdView(withTarget target: AnyObject, action: Selector) -> String {
-        return callHandler.registerCall(MockExampleProtocolImplementation.defaultReturnValue, args: [target, action] as [Any?]) as! String
+        return callHandler.registerCall(returnValue: MockExampleProtocolImplementation.defaultReturnValue, args: [target, action] as [Any?]) as! String
     }
     
     func didDisappear() {
@@ -40,7 +42,7 @@ class MockExampleProtocolImplementation: ExampleProtocol, MockItYourself {
     }
     
     func onUserDidSeeAd(conf: String?, adInfo: Int?, impressionIndex: UInt) {
-        callHandler.registerCall(nil, args: [conf, adInfo, impressionIndex])
+        callHandler.registerCall(returnValue: nil, args: [conf, adInfo, impressionIndex])
     }
 }
 

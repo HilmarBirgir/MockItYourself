@@ -6,6 +6,8 @@
 //  Copyright © 2016 Plain Vanilla Games. All rights reserved.
 //
 
+import XCTest
+
 protocol MockItYourself {
     var callHandler: MockCallHandler { get }
     
@@ -88,4 +90,9 @@ func reject(mock: MockItYourself, message: String = "", file: String = __FILE__,
     } catch let error {
         XCTFail("\(error)", file:  file, line: line)
     }
+}
+
+func stub(mock: MockItYourself, method: () -> (), andReturnValue returnValue: Any?)
+{
+    mock.stubMethod(method, andReturnValue: returnValue)
 }
