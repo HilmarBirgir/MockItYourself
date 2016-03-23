@@ -54,7 +54,7 @@ extension MockItYourself {
     }
 }
 
-func verify(mock: MockItYourself, message: String = "", file: String = __FILE__, line: UInt = __LINE__, verify: () -> ())
+func verify(mock: MockItYourself, message: String = "", file: StaticString = #file, line: UInt = #line, verify: () -> ())
 {
     do {
         try mock.verify(verify)
@@ -63,7 +63,7 @@ func verify(mock: MockItYourself, message: String = "", file: String = __FILE__,
     }
 }
 
-func verify(mock: MockItYourself, message: String = "", file: String = __FILE__, line: UInt = __LINE__, expectedCallCount: Int, verify: () -> ())
+func verify(mock: MockItYourself, message: String = "", file: StaticString = #file, line: UInt = #line, expectedCallCount: Int, verify: () -> ())
 {
     do {
         try mock.verify(expectedCallCount, fun: verify)
@@ -72,7 +72,7 @@ func verify(mock: MockItYourself, message: String = "", file: String = __FILE__,
     }
 }
 
-func verifyArguments(mock: MockItYourself, message: String = "", file: String = __FILE__, line: UInt = __LINE__, verify: () -> ())
+func verifyArguments(mock: MockItYourself, message: String = "", file: StaticString = #file, line: UInt = #line, verify: () -> ())
 {
     do {
         try mock.verifyArguments(verify)
@@ -81,7 +81,7 @@ func verifyArguments(mock: MockItYourself, message: String = "", file: String = 
     }
 }
 
-func reject(mock: MockItYourself, message: String = "", file: String = __FILE__, line: UInt = __LINE__, reject: () -> ())
+func reject(mock: MockItYourself, message: String = "", file: StaticString = #file, line: UInt = #line, reject: () -> ())
 {
     do {
         try mock.reject(reject)
