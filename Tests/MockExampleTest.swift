@@ -6,8 +6,6 @@
 //  Copyright © 2016 Plain Vanilla Games. All rights reserved.
 //
 
-import XCTest
-
 protocol ExampleProtocol {
     
     var property: String { get }
@@ -37,6 +35,7 @@ class MockExampleProtocolImplementation: ExampleProtocol, MockItYourself {
         //Not mocked method
     }
     
+    @objc
     func didAppear() {
         callHandler.registerCall()
     }
@@ -91,7 +90,7 @@ class MockExampleTests: XCTestCase {
     
     func test_can_verify_method_call_ignoring_arguments() {
         let arg1 = "arg1"
-        let arg2: Selector = "didAppear"
+        let arg2: Selector = #selector(MockExampleProtocolImplementation.didAppear)
         
         mockExample.buildAdView(withTarget: arg1, action: arg2)
         
@@ -113,7 +112,7 @@ class MockExampleTests: XCTestCase {
     
     func test_can_verify_method_call_not_ignoring_arguments() {
         let arg1 = "arg1"
-        let arg2: Selector = "didAppear"
+        let arg2: Selector = #selector(MockExampleProtocolImplementation.didAppear)
         
         mockExample.buildAdView(withTarget: arg1, action: arg2)
         
@@ -122,7 +121,7 @@ class MockExampleTests: XCTestCase {
     
     func test_verify_arguments_asserts_if_method_is_not_called() {
         let arg1 = "arg1"
-        let arg2: Selector = "didAppear"
+        let arg2: Selector = #selector(MockExampleProtocolImplementation.didAppear)
         
         var success = false
         
@@ -138,7 +137,7 @@ class MockExampleTests: XCTestCase {
     
     func test_verify_arguments_asserts_if_arguments_does_not_match() {
         let arg1 = "arg1"
-        let arg2: Selector = "didAppear"
+        let arg2: Selector = #selector(MockExampleProtocolImplementation.didAppear)
         
         mockExample.buildAdView(withTarget: "", action: arg2)
         
