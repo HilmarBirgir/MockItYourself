@@ -9,48 +9,36 @@
 protocol MockItYourself {
     var callHandler: MockCallHandler { get }
     
-    func verify(expectedCallCount: Int, fun: () -> ()) throws
+    func verify(expectedCallCount: Int, method: () -> ()) throws
     
-    func verify(fun: () -> ()) throws
+    func verify(method: () -> ()) throws
     
-    func verifyArguments(fun: () -> ()) throws
+    func verifyArguments(method: () -> ()) throws
     
-    func verifyArguments(comparator: (Any, Any) -> Bool, fun: () -> ()) throws
+    func reject(method: () -> ()) throws
     
-    func reject(fun: () -> ()) throws
-    
-    func stubMethod(method: () -> (), andReturnValue returnValue: Any?)
+    func stubMethod(method: () -> (), andReturnValue returnValue: Any?) throws
 }
 
 extension MockItYourself {
-    func verify(expectedCallCount: Int, fun: () -> ()) throws {
-        try callHandler.verify(expectedCallCount, fun: fun)
+    func verify(expectedCallCount: Int, method: () -> ()) throws {
+        try callHandler.verify(expectedCallCount, method: method)
     }
     
-    func verify(fun: () -> ()) throws {
-        try callHandler.verify(fun)
+    func verify(method: () -> ()) throws {
+        try callHandler.verify(method)
     }
     
-    func verifyArguments(fun: () -> ()) throws {
-        try self.verifyArguments({ first, second in
-            if let f = first as? AnyObject, let s = second as? AnyObject {
-                return f === s
-            } else {
-                return false
-            }
-        }, fun: fun)
+    func verifyArguments(method: () -> ()) throws {
+        try callHandler.verifyArguments(method)
     }
     
-    func verifyArguments(comparator: (Any, Any) -> Bool, fun: () -> ()) throws {
-        try callHandler.verifyArguments(comparator, fun: fun)
+    func reject(method: () -> ()) throws {
+        try callHandler.reject(method)
     }
     
-    func reject(fun: () -> ()) throws {
-        try callHandler.reject(fun)
-    }
-    
-    func stubMethod(method: () -> (), andReturnValue returnValue: Any?) {
-        callHandler.stubMethod(method, andReturnValue: returnValue)
+    func stubMethod(method: () -> (), andReturnValue returnValue: Any?) throws {
+        try callHandler.stubMethod(method, andReturnValue: returnValue)
     }
 }
 
@@ -66,7 +54,7 @@ func verify(mock: MockItYourself, message: String = "", file: StaticString = #fi
 func verify(mock: MockItYourself, message: String = "", file: StaticString = #file, line: UInt = #line, expectedCallCount: Int, verify: () -> ())
 {
     do {
-        try mock.verify(expectedCallCount, fun: verify)
+        try mock.verify(expectedCallCount, method: verify)
     } catch let error {
         XCTFail("\(error)", file:  file, line: line)
     }
@@ -90,7 +78,24 @@ func reject(mock: MockItYourself, message: String = "", file: StaticString = #fi
     }
 }
 
-func stub(mock: MockItYourself, method: () -> (), andReturnValue returnValue: Any?)
-{
-    mock.stubMethod(method, andReturnValue: returnValue)
+func stub(mock: MockItYourself, andReturnValue returnValue: Any?, file: StaticString = #file, line: UInt = #line, method: () -> ()) {
+     do {
+        try mock.stubMethod(method, andReturnValue: returnValue)
+     } catch let error {
+        XCTFail("\(error)", file:  file, line: line)
+    }
+}
+
+// Mark: Any Matchers
+
+func any<T: NSObject>() -> T {
+    return T()
+}
+
+func any() -> String {
+    return ""
+}
+
+func any<A, B>() -> [A: B] {
+    return [:]
 }

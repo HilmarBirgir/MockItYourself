@@ -28,7 +28,7 @@ class MockExampleProtocolImplementation: ExampleProtocol, MockItYourself {
     let callHandler = MockCallHandler()
     
     func buildAdView(withTarget target: AnyObject, action: Selector) -> String {
-        return callHandler.registerCall(returnValue: MockExampleProtocolImplementation.defaultReturnValue, args: [target, action] as [Any?]) as! String
+        return callHandler.registerCall(args: Args2(arg(target), arg(action)), returnValue: MockExampleProtocolImplementation.defaultReturnValue) as! String
     }
     
     func didDisappear() {
@@ -41,7 +41,7 @@ class MockExampleProtocolImplementation: ExampleProtocol, MockItYourself {
     }
     
     func onUserDidSeeAd(conf: String?, adInfo: Int?, impressionIndex: UInt) {
-        callHandler.registerCall(returnValue: nil, args: [conf, adInfo, impressionIndex])
+        callHandler.registerCall(args: Args3(arg(conf), arg(adInfo), arg(impressionIndex)))
     }
 }
 
@@ -94,14 +94,14 @@ class MockExampleTests: XCTestCase {
         
         mockExample.buildAdView(withTarget: arg1, action: arg2)
         
-        verify(mockExample) { self.mockExample.buildAdView(withTarget: Anything(), action: nil) }
+        verify(mockExample) { self.mockExample.buildAdView(withTarget: any(), action: nil) }
     }
     
     func test_verify_asserts_if_method_is_not_called() {
         var success = false
         
         do {
-            try mockExample.verify() { self.mockExample.buildAdView(withTarget: Anything(), action: nil) }
+            try mockExample.verify() { self.mockExample.buildAdView(withTarget: any(), action: nil) }
         }
         catch {
             success = true
@@ -135,6 +135,18 @@ class MockExampleTests: XCTestCase {
         XCTAssertTrue(success)
     }
     
+    func test_verifying_not_mocked_method_asserts() {
+        var success = false
+        
+        do {
+            try mockExample.verify() { self.mockExample.didDisappear() }
+        } catch {
+            success = true
+        }
+        
+        XCTAssertTrue(success)
+    }
+    
     func test_verify_arguments_asserts_if_arguments_does_not_match() {
         let arg1 = "arg1"
         let arg2: Selector = #selector(MockExampleProtocolImplementation.didAppear)
@@ -152,6 +164,8 @@ class MockExampleTests: XCTestCase {
         
         XCTAssertTrue(success)
     }
+    
+    // MARK: Reject
 
     func test_can_reject_method_with_any_arguments() {
         reject(mockExample) { self.mockExample.onUserDidSeeAd(nil, adInfo: nil, impressionIndex: 0) }
@@ -171,11 +185,11 @@ class MockExampleTests: XCTestCase {
          XCTAssertTrue(success)
     }
     
-    func test_verifying_not_mocked_method_asserts() {
+    func test_rejecting_not_mocked_method_asserts() {
         var success = false
         
         do {
-            try mockExample.verify() { self.mockExample.didDisappear() }
+            try mockExample.reject() { self.mockExample.didDisappear() }
         } catch {
             success = true
         }
@@ -191,19 +205,19 @@ class MockExampleTests: XCTestCase {
         XCTAssertEqual(actualReturn, MockExampleProtocolImplementation.defaultReturnValue)
     }
     
-    func test_can_stub_method_to_return_value() {
+    func test_can_stub_method_to_return_value() throws {
         let expectedReturn = "expected return"
         
-        mockExample.stubMethod({ self.mockExample.buildAdView(withTarget: Anything(), action: nil) }, andReturnValue: expectedReturn)
+        try mockExample.stubMethod({ self.mockExample.buildAdView(withTarget: any(), action: nil) }, andReturnValue: expectedReturn)
         let actualReturn = mockExample.buildAdView(withTarget: "", action: nil)
         
         XCTAssertEqual(actualReturn, expectedReturn)
     }
     
-    func test_can_stub_property() {
+    func test_can_stub_property() throws {
         let expectedReturn = "expected return"
         
-        mockExample.stubMethod({ self.mockExample.property }, andReturnValue: expectedReturn)
+        try mockExample.stubMethod({ self.mockExample.property }, andReturnValue: expectedReturn)
         let actualReturn = mockExample.property
         
         XCTAssertEqual(actualReturn, expectedReturn)
