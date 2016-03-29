@@ -22,13 +22,13 @@ class MockExampleProtocolImplementation: ExampleProtocol, MockItYourself {
     static let defaultReturnValue = "default return value"
     
     var property: String {
-        return callHandler.registerCall(Args0(), returnValue: MockExampleProtocolImplementation.defaultReturnValue) as! String
+        return callHandler.registerCall(returnValue: MockExampleProtocolImplementation.defaultReturnValue) as! String
     }
     
     let callHandler = MockCallHandler()
     
     func buildAdView(withTarget target: AnyObject, action: Selector) -> String {
-        return callHandler.registerCall(Args2(arg(target), arg(action)), returnValue: MockExampleProtocolImplementation.defaultReturnValue) as! String
+        return callHandler.registerCall(args: Args2(arg(target), arg(action)), returnValue: MockExampleProtocolImplementation.defaultReturnValue) as! String
     }
     
     func didDisappear() {
@@ -37,11 +37,11 @@ class MockExampleProtocolImplementation: ExampleProtocol, MockItYourself {
     
     @objc
     func didAppear() {
-        callHandler.registerCall(Args0())
+        callHandler.registerCall()
     }
     
     func onUserDidSeeAd(conf: String?, adInfo: Int?, impressionIndex: UInt) {
-        callHandler.registerCall(Args3(arg(conf), arg(adInfo), arg(impressionIndex)))
+        callHandler.registerCall(args: Args3(arg(conf), arg(adInfo), arg(impressionIndex)))
     }
 }
 

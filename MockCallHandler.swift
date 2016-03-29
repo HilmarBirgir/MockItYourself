@@ -27,7 +27,11 @@ class MockCallHandler {
         return methodName
     }
     
-    func registerCall<A: Equatable>(args: A, returnValue: Any? = nil, callName: String = #function) -> Any? {
+    func registerCall(returnValue returnValue: Any? = nil, callName: String = #function) -> Any? {
+        return registerCall(args: Args0(), returnValue: returnValue, callName: callName)
+    }
+    
+    func registerCall<A: Equatable>(args args: A, returnValue: Any? = nil, callName: String = #function) -> Any? {
         lastCalledFunctionName = callName
         
         if let callHistory = recordedCalls[callName] as? CallHistoryRecorder<A> {
