@@ -8,110 +8,63 @@
 
 class MockCallHandler {
     
-    var functionCallsCounts = [String: Int]()
-    var functionCallsArguments = [String: [[Any?]]]()
+    var recordedCalls = [String: CallHistory]()
     var stubbedReturns = [String: Any]()
-
     var expectingFunctionCall = false
 
     private var lastCalledFunctionName = ""
     
-    private var lastCalledFunction: (functionName: String, calledArguments: [Any?]) {
-        unregisterLastCall()
-        let callArguments = lastCallArguments(lastCalledFunctionName)
-        
-        defer {
-            lastCalledFunctionName = ""
-        }
-        
-        return (functionName: lastCalledFunctionName, calledArguments: callArguments)
-    }
-    
-    private func getFunctionDescription(fun: () -> ()) throws -> (functionName: String, calledArguments: [Any?]) {
+    private func captureMethodName(method: () -> ()) throws -> String {
         expectingFunctionCall = true
-        fun()
+        method()
         if (expectingFunctionCall) {
             throw MockVerificationError.MethodNotMocked
         }
+        
+        let methodName = lastCalledFunctionName
+        lastCalledFunctionName = ""
 
-        return lastCalledFunction
+        return methodName
     }
     
-    func registerCall(returnValue: Any? = nil, args: [Any?] = [], callName: String = #function) -> Any? {
-        expectingFunctionCall = false
-        
+    func registerCall<A: Equatable>(args: A, returnValue: Any? = nil, callName: String = #function) -> Any? {
         lastCalledFunctionName = callName
         
-        if let prevArgs = functionCallsArguments[callName] {
-            functionCallsArguments.updateValue(prevArgs + [args], forKey: callName)
-        } else {
-            functionCallsArguments.updateValue([args], forKey: callName)
+        if let callHistory = recordedCalls[callName] as? CallHistoryRecorder<A> {
+            callHistory.record(args, verificationCall: expectingFunctionCall)
+        } else if expectingFunctionCall == false {
+            recordedCalls[callName] = CallHistoryRecorder(firstArgs: args)
         }
         
-        var callsCount = 1
-        if let prevCallsCount = functionCallsCounts[callName] {
-            callsCount += prevCallsCount
-        }
-        functionCallsCounts.updateValue(callsCount, forKey: callName)
+        expectingFunctionCall = false
         
         let stubbedReturn = stubbedReturns[callName]
         return stubbedReturn == nil ? returnValue : stubbedReturn is ExpectedNil ? nil : stubbedReturn
     }
     
-    private func unregisterLastCall() {
-        if let prevCallsCount = functionCallsCounts[lastCalledFunctionName] {
-            let callsCount = prevCallsCount - 1
-            if (callsCount != 0) {
-                functionCallsCounts.updateValue(callsCount, forKey: lastCalledFunctionName)
-            } else {
-                functionCallsCounts.removeValueForKey(lastCalledFunctionName)
-            }
+    func verify(method: () -> ()) throws  {
+        let methodName = try captureMethodName(method)
+        if recordedCalls[methodName] == nil {
+            throw MockVerificationError.MethodNotCalled
         }
     }
-    
-    private func lastCallArguments(funcName: String) -> [Any?] {
-        if let prevFuncArguments = functionCallsArguments[lastCalledFunctionName] {
-            if prevFuncArguments.count > 0 {
-                if let arguments = functionCallsArguments[lastCalledFunctionName]?.removeLast() {
-                    if functionCallsArguments[lastCalledFunctionName]?.count == 0 {
-                        functionCallsArguments.removeValueForKey(lastCalledFunctionName)
-                    }
-                    return arguments
-                }
-            }
-        }
-        return []
-    }
-    
-    func verify(expectedCallCount: Int, fun: () -> ()) throws {
-        let callName = try getFunctionDescription(fun).functionName
+
+    func verify(expectedCallCount: Int, method: () -> ()) throws {
+        let methodName = try captureMethodName(method)
         
-        let actualCallCount = functionCallsCounts[callName] ?? 0
-        
+        let actualCallCount = recordedCalls[methodName]?.count ?? 0
         if expectedCallCount != actualCallCount {
             throw MockVerificationError.MethodCallCountMismatch(actualCallCount, expectedCallCount)
         }
     }
     
-    func verify(fun: () -> ()) throws  {
-        let functionName = try getFunctionDescription(fun).functionName
-        if functionCallsCounts[functionName] == nil {
-            throw MockVerificationError.MethodNotCalled
-        }
-    }
-    
-    func verifyArguments(comparator: (Any, Any) -> Bool, fun: () -> ()) throws {
-        let function = try getFunctionDescription(fun)
+    func verifyArguments(method: () -> ()) throws {
+        let methodName = try captureMethodName(method)
         
-        if let prevFuncArguments = functionCallsArguments[function.functionName] {
-            var matchFound = false
-            let matcher = MockMatcher(comparator: comparator)
-            for args in prevFuncArguments {
-                matchFound = matcher.matchArrays(args, function.calledArguments)
-            }
-            
-            if !matchFound {
-                throw MockVerificationError.ArgumentsMismatch(prevFuncArguments, function.calledArguments)
+        if let callHistory = recordedCalls[methodName] {
+            let matchFound = callHistory.match()
+            if matchFound == false {
+                throw MockVerificationError.ArgumentsMismatch()
             }
         }
         else
@@ -120,25 +73,70 @@ class MockCallHandler {
         }
     }
     
-    func reject(fun: () -> ()) throws {
+    func reject(method: () -> ()) throws {
         var success = false
         
         do {
-            try verify(fun)
+            try verify(method)
+        } catch MockVerificationError.MethodNotMocked {
+            throw MockVerificationError.MethodNotMocked
         } catch {
             success = true
         }
         
-        if !success {
+        if success == false {
             throw MockVerificationError.MethodWasCalled
         }
     }
     
-    func stubMethod(method: () -> (), andReturnValue returnValue: Any?) {
-        method()
-        let callName = lastCalledFunction.functionName
+    func stubMethod(method: () -> (), andReturnValue returnValue: Any?) throws {
+        let methodName = try captureMethodName(method)
         
-        stubbedReturns[callName] = returnValue == nil ? ExpectedNil() : returnValue
+        stubbedReturns[methodName] = returnValue == nil ? ExpectedNil() : returnValue
+    }
+}
+
+protocol CallHistory {
+    var count: Int { get }
+    func match() -> Bool
+}
+
+func any(list: [Bool]) -> Bool {
+    for x in list {
+        if x {
+            return true
+        }
+    }
+    return false
+}
+
+
+class CallHistoryRecorder<A: Equatable> : CallHistory {
+    var verificationCall: A?
+    var history: [A]
+    
+    var count: Int {
+        return history.count
+    }
+    
+    init(firstArgs: A) {
+        history = [firstArgs]
+    }
+    
+    func record(args: A, verificationCall: Bool) {
+        if verificationCall {
+            self.verificationCall = args
+        } else {
+            history.append(args)
+        }
+    }
+    
+    func match() -> Bool {
+        if let callToLookFor = verificationCall {
+            return any(history.map({ $0 == callToLookFor }))
+        } else {
+            return false
+        }
     }
 }
 
@@ -146,6 +144,6 @@ enum MockVerificationError: ErrorType {
     case MethodNotCalled
     case MethodWasCalled
     case MethodCallCountMismatch(Int, Int)
-    case ArgumentsMismatch([[Any?]], [Any?])
+    case ArgumentsMismatch()
     case MethodNotMocked
 }
