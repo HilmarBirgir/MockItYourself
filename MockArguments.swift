@@ -57,6 +57,14 @@ func arg(anyObject: AnyObject) -> Arg<AnyObject, AnyObjectArgument> {
     return Arg.AnyObject(anyObject)
 }
 
+func arg(anyObjectList: [AnyObject]) -> Arg<AnyObject, AnyObjectArgument> {
+    return Arg.AnyObject(anyObjectList as AnyObject)
+}
+
+func arg(anyObjectList: [AnyObject]?) -> Arg<AnyObject, AnyObjectArgument> {
+    return Arg.AnyObject((anyObjectList ?? []) as AnyObject)
+}
+
 func arg(anyClass: AnyClass) -> Arg<AnyObject, AnyObjectArgument> {
     return Arg.AnyObject(anyClass)
 }
@@ -69,9 +77,13 @@ func arg<A: Equatable>(list: [A]) -> Arg<AnyObject, A> {
     return Arg.List(list)
 }
 
-func arg<A: Equatable, B: Equatable>(dict: [A: B]) -> Arg<AnyObject, String> {
+func arg<A, B>(dict: [A: B]) -> Arg<AnyObject, String> {
     let flattened = dict.map({"\($0):\($1)"})
     return Arg.List(flattened)
+}
+
+func arg<A, B>(dict: [A: B]?) -> Arg<AnyObject, String> {
+    return arg(dict ?? [:])
 }
 
 func arg<A: Equatable>(equatable: A?) -> Arg<AnyObject, A> {
@@ -136,4 +148,25 @@ class Args3<A1: Equatable, A2: Equatable, A3: Equatable> : Equatable  {
 
 func ==<A1, A2, A3>(lhs: Args3<A1, A2, A3>, rhs: Args3<A1, A2, A3>) -> Bool {
     return lhs.arg1 == rhs.arg1 && lhs.arg2 == rhs.arg2 && lhs.arg3 == rhs.arg3
+}
+
+
+// MARK: Args4
+
+class Args4<A1: Equatable, A2: Equatable, A3: Equatable, A4: Equatable> : Equatable  {
+    let arg1: Arg<AnyObject, A1>
+    let arg2: Arg<AnyObject, A2>
+    let arg3: Arg<AnyObject, A3>
+    let arg4: Arg<AnyObject, A4>
+    
+    init(_ arg1: Arg<AnyObject, A1>, _ arg2: Arg<AnyObject, A2>, _ arg3: Arg<AnyObject, A3>, _ arg4: Arg<AnyObject, A4>) {
+        self.arg1 = arg1
+        self.arg2 = arg2
+        self.arg3 = arg3
+        self.arg4 = arg4
+    }
+}
+
+func ==<A1, A2, A3, A4>(lhs: Args4<A1, A2, A3, A4>, rhs: Args4<A1, A2, A3, A4>) -> Bool {
+    return lhs.arg1 == rhs.arg1 && lhs.arg2 == rhs.arg2 && lhs.arg3 == rhs.arg3 && lhs.arg4 == rhs.arg4
 }
