@@ -170,3 +170,82 @@ class Args4<A1: Equatable, A2: Equatable, A3: Equatable, A4: Equatable> : Equata
 func ==<A1, A2, A3, A4>(lhs: Args4<A1, A2, A3, A4>, rhs: Args4<A1, A2, A3, A4>) -> Bool {
     return lhs.arg1 == rhs.arg1 && lhs.arg2 == rhs.arg2 && lhs.arg3 == rhs.arg3 && lhs.arg4 == rhs.arg4
 }
+
+// MARK: Args5
+
+class Args5<A1: Equatable, A2: Equatable, A3: Equatable, A4: Equatable, A5: Equatable> : Equatable  {
+    let arg1: Arg<AnyObject, A1>
+    let arg2: Arg<AnyObject, A2>
+    let arg3: Arg<AnyObject, A3>
+    let arg4: Arg<AnyObject, A4>
+    let arg5: Arg<AnyObject, A5>
+    
+    init(_ arg1: Arg<AnyObject, A1>, _ arg2: Arg<AnyObject, A2>, _ arg3: Arg<AnyObject, A3>, _ arg4: Arg<AnyObject, A4>, _ arg5: Arg<AnyObject, A5>) {
+        self.arg1 = arg1
+        self.arg2 = arg2
+        self.arg3 = arg3
+        self.arg4 = arg4
+        self.arg5 = arg5
+    }
+}
+
+func ==<A1, A2, A3, A4, A5>(lhs: Args5<A1, A2, A3, A4, A5>, rhs: Args5<A1, A2, A3, A4, A5>) -> Bool {
+    return lhs.arg1 == rhs.arg1 && lhs.arg2 == rhs.arg2 &&
+            lhs.arg3 == rhs.arg3 && lhs.arg4 == rhs.arg4 &&
+            lhs.arg5 == rhs.arg5
+}
+
+// MARK: Args6
+
+class Args6<A1: Equatable, A2: Equatable, A3: Equatable, A4: Equatable, A5: Equatable, A6: Equatable> : Equatable  {
+    let arg1: Arg<AnyObject, A1>
+    let arg2: Arg<AnyObject, A2>
+    let arg3: Arg<AnyObject, A3>
+    let arg4: Arg<AnyObject, A4>
+    let arg5: Arg<AnyObject, A5>
+    let arg6: Arg<AnyObject, A6>
+    
+    init(_ arg1: Arg<AnyObject, A1>, _ arg2: Arg<AnyObject, A2>, _ arg3: Arg<AnyObject, A3>, _ arg4: Arg<AnyObject, A4>, _ arg5: Arg<AnyObject, A5>, _ arg6: Arg<AnyObject, A6>) {
+        self.arg1 = arg1
+        self.arg2 = arg2
+        self.arg3 = arg3
+        self.arg4 = arg4
+        self.arg5 = arg5
+        self.arg6 = arg6
+    }
+}
+
+func ==<A1, A2, A3, A4, A5, A6>(lhs: Args6<A1, A2, A3, A4, A5, A6>, rhs: Args6<A1, A2, A3, A4, A5, A6>) -> Bool {
+    return lhs.arg1 == rhs.arg1 && lhs.arg2 == rhs.arg2 &&
+        lhs.arg3 == rhs.arg3 && lhs.arg4 == rhs.arg4 &&
+        lhs.arg5 == rhs.arg5 && lhs.arg6 == rhs.arg6
+}
+
+// MARK: Args7
+
+class Args7<A1: Equatable, A2: Equatable, A3: Equatable, A4: Equatable, A5: Equatable, A6: Equatable, A7: Equatable> : Equatable  {
+    let arg1: Arg<AnyObject, A1>
+    let arg2: Arg<AnyObject, A2>
+    let arg3: Arg<AnyObject, A3>
+    let arg4: Arg<AnyObject, A4>
+    let arg5: Arg<AnyObject, A5>
+    let arg6: Arg<AnyObject, A6>
+    let arg7: Arg<AnyObject, A7>
+    
+    init(_ arg1: Arg<AnyObject, A1>, _ arg2: Arg<AnyObject, A2>, _ arg3: Arg<AnyObject, A3>, _ arg4: Arg<AnyObject, A4>, _ arg5: Arg<AnyObject, A5>, _ arg6: Arg<AnyObject, A6>, _ arg7: Arg<AnyObject, A7>) {
+        self.arg1 = arg1
+        self.arg2 = arg2
+        self.arg3 = arg3
+        self.arg4 = arg4
+        self.arg5 = arg5
+        self.arg6 = arg6
+        self.arg7 = arg7
+    }
+}
+
+func ==<A1, A2, A3, A4, A5, A6, A7>(lhs: Args7<A1, A2, A3, A4, A5, A6, A7>, rhs: Args7<A1, A2, A3, A4, A5, A6, A7>) -> Bool {
+    return lhs.arg1 == rhs.arg1 && lhs.arg2 == rhs.arg2 &&
+        lhs.arg3 == rhs.arg3 && lhs.arg4 == rhs.arg4 &&
+        lhs.arg5 == rhs.arg5 && lhs.arg6 == rhs.arg6 &&
+        lhs.arg7 == rhs.arg7
+}
