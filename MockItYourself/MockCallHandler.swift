@@ -28,12 +28,37 @@ public class MockCallHandler {
 
         return methodName
     }
-    
-    public func registerCall(returnValue returnValue: Any? = nil, callName: String = #function) -> Any? {
-        return registerCall(args: Args0(), returnValue: returnValue, callName: callName)
+
+    public func registerCall(callName: String = #function) {
+        registerCall(args: Args0(), callName: callName)
     }
     
-    public func registerCall<A: Equatable>(args args: A, returnValue: Any? = nil, callName: String = #function) -> Any? {
+    public func registerCall<A: Equatable>(args args: A, callName: String = #function) {
+        lastCalledFunctionName = callName
+        
+        if let callHistory = recordedCalls[callName] as? CallHistoryRecorder<A> {
+            callHistory.record(args, verificationCall: expectingFunctionCall)
+        } else if expectingFunctionCall == false {
+            recordedCalls[callName] = CallHistoryRecorder(firstArgs: args)
+        }
+        
+        expectingFunctionCall = false
+    }
+    
+    public func registerCall<R: Any>(defaultReturnValue defaultReturnValue: R, callName: String = #function) -> R? {
+        return registerCall(args: Args0(), defaultReturnValue: defaultReturnValue, callName: callName)
+    }
+    
+    public func registerCall<A: Equatable, R: Any>(args args: A, defaultReturnValue: R, callName: String = #function) -> R? {
+        return registerCall(args: args, defaultReturnValue: defaultReturnValue, callName:callName)
+    }
+
+    public func registerCall<R: Any>(defaultReturnValue defaultReturnValue: R, callName: String = #function) -> R {
+        return registerCall(args: Args0(), defaultReturnValue: defaultReturnValue, callName: callName)
+    }
+    
+
+    public func registerCall<A: Equatable, R: Any>(args args: A, defaultReturnValue: R, callName: String = #function) -> R {
         lastCalledFunctionName = callName
         
         if let callHistory = recordedCalls[callName] as? CallHistoryRecorder<A> {
@@ -45,7 +70,12 @@ public class MockCallHandler {
         expectingFunctionCall = false
         
         let stubbedReturn = stubbedReturns[callName]
-        return stubbedReturn == nil ? returnValue : stubbedReturn is ExpectedNil ? nil : stubbedReturn
+        
+        if stubbedReturn != nil {
+            return stubbedReturn as! R
+        } else {
+            return defaultReturnValue
+        }
     }
 
     func verify(expectedCallCount expectedCallCount: Int? = nil, checkArguments: Bool = false, method: () -> ()) throws {

@@ -18,64 +18,58 @@ protocol ExampleProtocol {
     func methodWithOptionalArgument(arg1: String?)
     
     func methodWithArgs0()
-    func methodWithArgs1(arg1: String) -> String
+    func methodWithArgs0ReturnsOptional() -> String?
+    func methodWithArgs0Returns() -> String
+    
+    func methodWithArgs1(arg1: String)
+    func methodWithArgs1ReturnsOptional(arg1: String) -> String?
+    func methodWithArgs1Returns(arg1: String) -> String
+    
     func methodWithArgs2(arg1: AnyObject, arg2: Selector) -> String
 }
 
-class ExampleClass: ExampleProtocol {
-    var property: String {
-        return "hardcoded value"
-    }
-    
-    func methodThatIsNotMocked() {
-        print("methodThatIsNotMocked")
-    }
-    
-    func methodWithOptionalArgument(arg1: String?) {
-        print("methodWithOptionalArgument(\(arg1))")
-    }
-    
-    func methodWithArgs0() {
-        print("methodWithArgs0")
-    }
-    
-    func methodWithArgs1(arg1: String) -> String {
-        print("methodWithArgs1(arg1: \(arg1))")
-        return "return value"
-    }
-    
-    func methodWithArgs2(arg1: AnyObject, arg2: Selector) -> String {
-        print("methodWithArgs1(arg1: \(arg1), arg2: \(arg2))")
-        return "return value"
-    }
-}
-
-class MockExampleClass: ExampleClass, MockItYourself {
+class MockExampleClass: ExampleProtocol, MockItYourself {
     let callHandler = MockCallHandler()
     
     static let defaultReturnValue = "default return value"
     
-    override var property: String {
-        return callHandler.registerCall(returnValue: MockExampleClass.defaultReturnValue) as! String
+    var property: String {
+        return callHandler.registerCall(defaultReturnValue: MockExampleClass.defaultReturnValue)
     }
     
-    override func methodThatIsNotMocked() {
+    func methodThatIsNotMocked() {
         //Not mocked method
     }
     
-    override func methodWithOptionalArgument(arg1: String?) {
+    func methodWithOptionalArgument(arg1: String?) {
         callHandler.registerCall(args: Args1(arg(arg1)))
     }
     
-    override func methodWithArgs0() {
+    func methodWithArgs0() {
         callHandler.registerCall()
     }
     
-    override func methodWithArgs1(arg1: String) -> String {
-        return callHandler.registerCall(args: Args1(arg(arg1)), returnValue: MockExampleClass.defaultReturnValue) as! String
+    func methodWithArgs0ReturnsOptional() -> String? {
+        return callHandler.registerCall(defaultReturnValue: nil)
     }
     
-    override func methodWithArgs2(arg1: AnyObject, arg2: Selector) -> String {
-        return callHandler.registerCall(args: Args2(arg(arg1), arg(arg2)), returnValue: MockExampleClass.defaultReturnValue) as! String
+    func methodWithArgs0Returns() -> String {
+        return callHandler.registerCall(defaultReturnValue: MockExampleClass.defaultReturnValue)
+    }
+    
+    func methodWithArgs1(arg1: String) {
+        callHandler.registerCall(args: Args1(arg(arg1)))
+    }
+    
+    func methodWithArgs1ReturnsOptional(arg1: String) -> String? {
+        return callHandler.registerCall(args: Args1(arg(arg1)), defaultReturnValue: nil)
+    }
+    
+    func methodWithArgs1Returns(arg1: String) -> String {
+        return callHandler.registerCall(args: Args1(arg(arg1)), defaultReturnValue: MockExampleClass.defaultReturnValue)
+    }
+    
+    func methodWithArgs2(arg1: AnyObject, arg2: Selector) -> String {
+        return callHandler.registerCall(args: Args2(arg(arg1), arg(arg2)), defaultReturnValue: MockExampleClass.defaultReturnValue)
     }
 }
