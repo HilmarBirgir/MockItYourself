@@ -6,7 +6,10 @@
 //  Copyright © 2016 Plain Vanilla Games. All rights reserved.
 //
 
-protocol MockItYourself {
+import Foundation
+import XCTest
+
+public protocol MockItYourself {
     var callHandler: MockCallHandler { get }
     
     func verify(expectedCallCount: Int, method: () -> ()) throws
@@ -20,7 +23,7 @@ protocol MockItYourself {
     func stubMethod(method: () -> (), andReturnValue returnValue: Any?) throws
 }
 
-extension MockItYourself {
+public extension MockItYourself {
     func verify(expectedCallCount: Int, method: () -> ()) throws {
         try callHandler.verify(expectedCallCount, method: method)
     }
@@ -42,7 +45,7 @@ extension MockItYourself {
     }
 }
 
-func verify(mock: MockItYourself, message: String = "", file: StaticString = #file, line: UInt = #line, verify: () -> ())
+public func verify(mock: MockItYourself, message: String = "", file: StaticString = #file, line: UInt = #line, verify: () -> ())
 {
     do {
         try mock.verify(verify)
@@ -51,7 +54,7 @@ func verify(mock: MockItYourself, message: String = "", file: StaticString = #fi
     }
 }
 
-func verify(mock: MockItYourself, message: String = "", file: StaticString = #file, line: UInt = #line, expectedCallCount: Int, verify: () -> ())
+public func verify(mock: MockItYourself, message: String = "", file: StaticString = #file, line: UInt = #line, expectedCallCount: Int, verify: () -> ())
 {
     do {
         try mock.verify(expectedCallCount, method: verify)
@@ -60,7 +63,7 @@ func verify(mock: MockItYourself, message: String = "", file: StaticString = #fi
     }
 }
 
-func verifyArguments(mock: MockItYourself, message: String = "", file: StaticString = #file, line: UInt = #line, verify: () -> ())
+public func verifyArguments(mock: MockItYourself, message: String = "", file: StaticString = #file, line: UInt = #line, verify: () -> ())
 {
     do {
         try mock.verifyArguments(verify)
@@ -69,7 +72,7 @@ func verifyArguments(mock: MockItYourself, message: String = "", file: StaticStr
     }
 }
 
-func reject(mock: MockItYourself, message: String = "", file: StaticString = #file, line: UInt = #line, reject: () -> ())
+public func reject(mock: MockItYourself, message: String = "", file: StaticString = #file, line: UInt = #line, reject: () -> ())
 {
     do {
         try mock.reject(reject)
@@ -78,7 +81,7 @@ func reject(mock: MockItYourself, message: String = "", file: StaticString = #fi
     }
 }
 
-func stub(mock: MockItYourself, andReturnValue returnValue: Any?, file: StaticString = #file, line: UInt = #line, method: () -> ()) {
+public func stub(mock: MockItYourself, andReturnValue returnValue: Any?, file: StaticString = #file, line: UInt = #line, method: () -> ()) {
      do {
         try mock.stubMethod(method, andReturnValue: returnValue)
      } catch let error {
@@ -88,14 +91,14 @@ func stub(mock: MockItYourself, andReturnValue returnValue: Any?, file: StaticSt
 
 // Mark: Any Matchers
 
-func any<T: NSObject>() -> T {
+public func any<T: NSObject>() -> T {
     return T()
 }
 
-func any() -> String {
+public func any() -> String {
     return ""
 }
 
-func any<A, B>() -> [A: B] {
+public func any<A, B>() -> [A: B] {
     return [:]
 }

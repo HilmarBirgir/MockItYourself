@@ -6,6 +6,9 @@
 //  Copyright © 2016 Plain Vanilla Games. All rights reserved.
 //
 
+import XCTest
+import MockItYourself
+
 protocol ExampleProtocol {
     
     var property: String { get }

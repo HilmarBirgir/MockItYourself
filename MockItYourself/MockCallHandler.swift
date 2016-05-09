@@ -6,13 +6,15 @@
 //  Copyright © 2016 Plain Vanilla Games. All rights reserved.
 //
 
-class MockCallHandler {
+public class MockCallHandler {
     
-    var recordedCalls = [String: CallHistory]()
-    var stubbedReturns = [String: Any]()
-    var expectingFunctionCall = false
+    private var recordedCalls = [String: CallHistory]()
+    private var stubbedReturns = [String: Any]()
+    private var expectingFunctionCall = false
 
     private var lastCalledFunctionName = ""
+
+    public init() {}
     
     private func captureMethodName(method: () -> ()) throws -> String {
         expectingFunctionCall = true
@@ -27,11 +29,11 @@ class MockCallHandler {
         return methodName
     }
     
-    func registerCall(returnValue returnValue: Any? = nil, callName: String = #function) -> Any? {
+    public func registerCall(returnValue returnValue: Any? = nil, callName: String = #function) -> Any? {
         return registerCall(args: Args0(), returnValue: returnValue, callName: callName)
     }
     
-    func registerCall<A: Equatable>(args args: A, returnValue: Any? = nil, callName: String = #function) -> Any? {
+    public func registerCall<A: Equatable>(args args: A, returnValue: Any? = nil, callName: String = #function) -> Any? {
         lastCalledFunctionName = callName
         
         if let callHistory = recordedCalls[callName] as? CallHistoryRecorder<A> {
@@ -113,7 +115,6 @@ func any(list: [Bool]) -> Bool {
     }
     return false
 }
-
 
 class CallHistoryRecorder<A: Equatable> : CallHistory {
     var verificationCall: A?

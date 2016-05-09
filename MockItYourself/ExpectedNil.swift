@@ -6,5 +6,5 @@
 //  Copyright © 2016 Plain Vanilla Games. All rights reserved.
 //
 
-class ExpectedNil {
+public class ExpectedNil {
 }
