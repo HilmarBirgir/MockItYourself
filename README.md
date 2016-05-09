@@ -147,6 +147,7 @@ class MockExampleTests: XCTestCase {
 + Alexey Verein, alexey@plainvanillagames.com
 + Jóhann Þ. Bergþórsson, johann@plainvanillagames.com
 + Magnus Ó. Magnússon, magnus@plainvanillagames.com
++ Alexander A. Helgason, alliannas@plainvanillagames.com
 
 ## License
 

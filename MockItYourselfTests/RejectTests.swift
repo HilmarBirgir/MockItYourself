@@ -6,8 +6,7 @@
 //
 
 import XCTest
-import MockItYourself
-
+@testable import MockItYourself
 
 class RejectTests: XCTestCase {
     

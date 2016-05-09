@@ -7,7 +7,7 @@
 //
 
 import XCTest
-import MockItYourself
+@testable import MockItYourself
 
 class VerifyArgumentsTests: XCTestCase {
     

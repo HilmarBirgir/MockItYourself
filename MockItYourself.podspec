@@ -12,7 +12,8 @@ MockItYourself reduces the boilerplate needed to manually create mocks and is he
   s.license          = 'MIT'
   s.author           = { "Alexey Verein" => "alexey@plainvanillagames.com", 
                           "Jóhann Þ. Bergþórsson" => "johann@plainvanillagames.com",
-                          "Magnus Ó. Magnússon" => "magnus@plainvanillagames.com"}
+                          "Magnus Ó. Magnússon" => "magnus@plainvanillagames.com",
+                          "Alexander A. Helgason" => "alliannas@plainvanillagames.com"}
   
   s.source           = { :git => "https://github.com/plain-vanilla-games/MockItYourself.git", :tag => s.version.to_s }
   s.source_files = 'MockItYourself/**/*.swift'

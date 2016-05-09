@@ -11,19 +11,9 @@ import XCTest
 
 public protocol MockItYourself {
     var callHandler: MockCallHandler { get }
-    
-    func verify(expectedCallCount: Int, method: () -> ()) throws
-    
-    func verify(method: () -> ()) throws
-    
-    func verifyArguments(method: () -> ()) throws
-    
-    func reject(method: () -> ()) throws
-    
-    func stubMethod(method: () -> (), andReturnValue returnValue: Any?) throws
 }
 
-public extension MockItYourself {
+extension MockItYourself {
     func verify(expectedCallCount: Int, method: () -> ()) throws {
         try callHandler.verify(expectedCallCount, method: method)
     }
