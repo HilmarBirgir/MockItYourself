@@ -35,8 +35,7 @@ extension MockItYourself {
     }
 }
 
-public func verify(mock: MockItYourself, message: String = "", file: StaticString = #file, line: UInt = #line, verify: () -> ())
-{
+public func verify(mock: MockItYourself, message: String = "", file: StaticString = #file, line: UInt = #line, verify: () -> ()) {
     do {
         try mock.verify(verify)
     } catch let error {
@@ -44,8 +43,7 @@ public func verify(mock: MockItYourself, message: String = "", file: StaticStrin
     }
 }
 
-public func verify(mock: MockItYourself, message: String = "", file: StaticString = #file, line: UInt = #line, expectedCallCount: Int, verify: () -> ())
-{
+public func verify(mock: MockItYourself, message: String = "", file: StaticString = #file, line: UInt = #line, expectedCallCount: Int, verify: () -> ()) {
     do {
         try mock.verify(expectedCallCount, method: verify)
     } catch let error {
@@ -53,8 +51,7 @@ public func verify(mock: MockItYourself, message: String = "", file: StaticStrin
     }
 }
 
-public func verifyArguments(mock: MockItYourself, message: String = "", file: StaticString = #file, line: UInt = #line, verify: () -> ())
-{
+public func verifyArguments(mock: MockItYourself, message: String = "", file: StaticString = #file, line: UInt = #line, verify: () -> ()) {
     do {
         try mock.verifyArguments(verify)
     } catch let error {
@@ -62,8 +59,7 @@ public func verifyArguments(mock: MockItYourself, message: String = "", file: St
     }
 }
 
-public func reject(mock: MockItYourself, message: String = "", file: StaticString = #file, line: UInt = #line, reject: () -> ())
-{
+public func reject(mock: MockItYourself, message: String = "", file: StaticString = #file, line: UInt = #line, reject: () -> ()) {
     do {
         try mock.reject(reject)
     } catch let error {

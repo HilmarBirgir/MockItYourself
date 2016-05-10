@@ -78,8 +78,7 @@ class VerifyArgumentsTests: XCTestCase {
         
         do {
             try mockExample.verify() { self.mockExample.methodWithArgs2(any(), arg2: nil) }
-        }
-        catch {
+        } catch {
             success = true
         }
         
@@ -111,8 +110,7 @@ class VerifyArgumentsTests: XCTestCase {
         
         do {
             try mockExample.verifyArguments() { self.mockExample.methodWithArgs2(arg1, arg2: arg2) }
-        }
-        catch {
+        } catch {
             success = true
         }
         
@@ -129,13 +127,10 @@ class VerifyArgumentsTests: XCTestCase {
         
         do {
             try mockExample.verifyArguments() { self.mockExample.methodWithArgs2(arg1, arg2: arg2) }
-        }
-        catch {
+        } catch {
             success = true
         }
         
         XCTAssertTrue(success)
     }
 }
-
-

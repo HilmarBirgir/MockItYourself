@@ -10,9 +10,9 @@ import Foundation
 
 // This type only exists to complete the generics for the Arg type
 // in the AnyObject case
-public struct AnyObjectArgument : Equatable {}
+public struct AnyObjectArgument: Equatable {}
 
-public func ==(lhs: AnyObjectArgument, rhs: AnyObjectArgument) -> Bool {
+public func == (lhs: AnyObjectArgument, rhs: AnyObjectArgument) -> Bool {
     return false
 }
 
@@ -28,22 +28,7 @@ public enum Arg<A: AnyObject, B: Equatable> : Equatable {
 public func ==<A: AnyObject, B: Equatable>(lhs: Arg<A, B>, rhs: Arg<A, B>) -> Bool {
     switch (lhs, rhs) {
     case (.AnyObject(let x), .AnyObject(let y)):
-        switch (x, y) {
-        case let (lhs as String, rhs as String):
-            return lhs == rhs
-        case let (lhs as Int, rhs as Int):
-            return lhs == rhs
-        case let (lhs as Double, rhs as Double):
-            return lhs == rhs
-        case let (lhs as Bool, rhs as Bool):
-            return lhs == rhs
-        case let (lhs as Selector, rhs as Selector):
-            return lhs.description == rhs.description
-        case let (lhs as NSObject, rhs as NSObject):
-            return lhs.isEqual(rhs)
-        default:
-            return x === y
-        }
+        return x == y
     case (.Equatable(let x), .Equatable(let y)):
         return x == y
     case (.List(let x), .List(let y)):
@@ -52,6 +37,25 @@ public func ==<A: AnyObject, B: Equatable>(lhs: Arg<A, B>, rhs: Arg<A, B>) -> Bo
         return true
     default:
         return false
+    }
+}
+
+func == (lhs: AnyObject, rhs: AnyObject) -> Bool {
+    switch (lhs, rhs) {
+    case let (lhs as String, rhs as String):
+        return lhs == rhs
+    case let (lhs as Int, rhs as Int):
+        return lhs == rhs
+    case let (lhs as Double, rhs as Double):
+        return lhs == rhs
+    case let (lhs as Bool, rhs as Bool):
+        return lhs == rhs
+    case let (lhs as Selector, rhs as Selector):
+        return lhs.description == rhs.description
+    case let (lhs as NSObject, rhs as NSObject):
+        return lhs.isEqual(rhs)
+    default:
+        return lhs === rhs
     }
 }
 
@@ -98,15 +102,15 @@ public func arg<A: Equatable>(equatable: A?) -> Arg<AnyObject, A> {
 
 // MARK: Args0
 
-public class Args0 : Equatable {}
+public class Args0: Equatable {}
 
-public func ==(lhs: Args0, rhs: Args0) -> Bool {
+public func == (lhs: Args0, rhs: Args0) -> Bool {
     return true
 }
 
 // MARK: Args1
 
-public class Args1<A1: Equatable> : Equatable  {
+public class Args1<A1: Equatable>: Equatable {
     let arg1: Arg<AnyObject, A1>
     
     public init(_ arg1: Arg<AnyObject, A1>) {
@@ -136,7 +140,7 @@ public func ==<A1, A2>(lhs: Args2<A1, A2>, rhs: Args2<A1, A2>) -> Bool {
 
 // MARK: Args3
 
-public class Args3<A1: Equatable, A2: Equatable, A3: Equatable> : Equatable  {
+public class Args3<A1: Equatable, A2: Equatable, A3: Equatable>: Equatable {
     let arg1: Arg<AnyObject, A1>
     let arg2: Arg<AnyObject, A2>
     let arg3: Arg<AnyObject, A3>
@@ -155,7 +159,7 @@ public func ==<A1, A2, A3>(lhs: Args3<A1, A2, A3>, rhs: Args3<A1, A2, A3>) -> Bo
 
 // MARK: Args4
 
-public class Args4<A1: Equatable, A2: Equatable, A3: Equatable, A4: Equatable> : Equatable  {
+public class Args4<A1: Equatable, A2: Equatable, A3: Equatable, A4: Equatable>: Equatable {
     let arg1: Arg<AnyObject, A1>
     let arg2: Arg<AnyObject, A2>
     let arg3: Arg<AnyObject, A3>
@@ -175,7 +179,7 @@ public func ==<A1, A2, A3, A4>(lhs: Args4<A1, A2, A3, A4>, rhs: Args4<A1, A2, A3
 
 // MARK: Args5
 
-public class Args5<A1: Equatable, A2: Equatable, A3: Equatable, A4: Equatable, A5: Equatable> : Equatable  {
+public class Args5<A1: Equatable, A2: Equatable, A3: Equatable, A4: Equatable, A5: Equatable>: Equatable {
     let arg1: Arg<AnyObject, A1>
     let arg2: Arg<AnyObject, A2>
     let arg3: Arg<AnyObject, A3>
@@ -199,7 +203,7 @@ public func ==<A1, A2, A3, A4, A5>(lhs: Args5<A1, A2, A3, A4, A5>, rhs: Args5<A1
 
 // MARK: Args6
 
-public class Args6<A1: Equatable, A2: Equatable, A3: Equatable, A4: Equatable, A5: Equatable, A6: Equatable> : Equatable  {
+public class Args6<A1: Equatable, A2: Equatable, A3: Equatable, A4: Equatable, A5: Equatable, A6: Equatable>: Equatable {
     let arg1: Arg<AnyObject, A1>
     let arg2: Arg<AnyObject, A2>
     let arg3: Arg<AnyObject, A3>
@@ -225,7 +229,7 @@ public func ==<A1, A2, A3, A4, A5, A6>(lhs: Args6<A1, A2, A3, A4, A5, A6>, rhs: 
 
 // MARK: Args7
 
-public class Args7<A1: Equatable, A2: Equatable, A3: Equatable, A4: Equatable, A5: Equatable, A6: Equatable, A7: Equatable> : Equatable  {
+public class Args7<A1: Equatable, A2: Equatable, A3: Equatable, A4: Equatable, A5: Equatable, A6: Equatable, A7: Equatable>: Equatable {
     let arg1: Arg<AnyObject, A1>
     let arg2: Arg<AnyObject, A2>
     let arg3: Arg<AnyObject, A3>
@@ -254,7 +258,7 @@ public func ==<A1, A2, A3, A4, A5, A6, A7>(lhs: Args7<A1, A2, A3, A4, A5, A6, A7
 
 // MARK: Args8
 
-public class Args8<A1: Equatable, A2: Equatable, A3: Equatable, A4: Equatable, A5: Equatable, A6: Equatable, A7: Equatable, A8: Equatable> : Equatable  {
+public class Args8<A1: Equatable, A2: Equatable, A3: Equatable, A4: Equatable, A5: Equatable, A6: Equatable, A7: Equatable, A8: Equatable>: Equatable {
     let arg1: Arg<AnyObject, A1>
     let arg2: Arg<AnyObject, A2>
     let arg3: Arg<AnyObject, A3>
@@ -285,7 +289,7 @@ public func ==<A1, A2, A3, A4, A5, A6, A7, A8>(lhs: Args8<A1, A2, A3, A4, A5, A6
 
 // MARK: Args9
 
-public class Args9<A1: Equatable, A2: Equatable, A3: Equatable, A4: Equatable, A5: Equatable, A6: Equatable, A7: Equatable, A8: Equatable, A9: Equatable> : Equatable  {
+public class Args9<A1: Equatable, A2: Equatable, A3: Equatable, A4: Equatable, A5: Equatable, A6: Equatable, A7: Equatable, A8: Equatable, A9: Equatable>: Equatable {
     let arg1: Arg<AnyObject, A1>
     let arg2: Arg<AnyObject, A2>
     let arg3: Arg<AnyObject, A3>
@@ -319,7 +323,7 @@ public func ==<A1, A2, A3, A4, A5, A6, A7, A8, A9>(lhs: Args9<A1, A2, A3, A4, A5
 
 // MARK: Args10
 
-public class Args10<A1: Equatable, A2: Equatable, A3: Equatable, A4: Equatable, A5: Equatable, A6: Equatable, A7: Equatable, A8: Equatable, A9: Equatable, A10: Equatable> : Equatable  {
+public class Args10<A1: Equatable, A2: Equatable, A3: Equatable, A4: Equatable, A5: Equatable, A6: Equatable, A7: Equatable, A8: Equatable, A9: Equatable, A10: Equatable>: Equatable {
     let arg1: Arg<AnyObject, A1>
     let arg2: Arg<AnyObject, A2>
     let arg3: Arg<AnyObject, A3>
@@ -355,7 +359,7 @@ public func ==<A1, A2, A3, A4, A5, A6, A7, A8, A9, A10>(lhs: Args10<A1, A2, A3, 
 
 // MARK: Args11
 
-public class Args11<A1: Equatable, A2: Equatable, A3: Equatable, A4: Equatable, A5: Equatable, A6: Equatable, A7: Equatable, A8: Equatable, A9: Equatable, A10: Equatable, A11: Equatable> : Equatable  {
+public class Args11<A1: Equatable, A2: Equatable, A3: Equatable, A4: Equatable, A5: Equatable, A6: Equatable, A7: Equatable, A8: Equatable, A9: Equatable, A10: Equatable, A11: Equatable>: Equatable {
     let arg1: Arg<AnyObject, A1>
     let arg2: Arg<AnyObject, A2>
     let arg3: Arg<AnyObject, A3>
@@ -391,5 +395,3 @@ public func ==<A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11>(lhs: Args11<A1, A2,
         lhs.arg9 == rhs.arg9 && lhs.arg10 == rhs.arg10 &&
         lhs.arg11 == rhs.arg11
 }
-
-
