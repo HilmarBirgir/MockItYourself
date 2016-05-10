@@ -9,6 +9,7 @@
 import XCTest
 import MockItYourself
 
+
 class StubTests: XCTestCase {
     
     var mockExample: MockExampleClass!
@@ -25,7 +26,7 @@ class StubTests: XCTestCase {
         XCTAssertEqual(actualReturn, MockExampleClass.defaultReturnValue)
     }
     
-    func test_can_stub_method_to_return_value() throws {
+    func test_can_stub_method_to_return_value() {
         let expectedReturn = "expected return"
         
         stub(mockExample, andReturnValue: expectedReturn) { self.mockExample.methodWithArgs1Returns("") }
@@ -34,11 +35,20 @@ class StubTests: XCTestCase {
         XCTAssertEqual(actualReturn, expectedReturn)
     }
     
-    func test_can_stub_property() throws {
+    func test_can_stub_property() {
         let expectedReturn = "expected return"
         
         stub(mockExample, andReturnValue: expectedReturn) { self.mockExample.property }
         let actualReturn = mockExample.property
+        
+        XCTAssertEqual(actualReturn, expectedReturn)
+    }
+    
+    func test_can_stub_implicitly_unwrapped_optional() {
+        let expectedReturn = "expected return"
+        
+        stub(mockExample, andReturnValue: expectedReturn) { self.mockExample.propertyImplicitlyUnwrapped }
+        let actualReturn = mockExample.propertyImplicitlyUnwrapped
         
         XCTAssertEqual(actualReturn, expectedReturn)
     }
