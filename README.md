@@ -1,6 +1,6 @@
 # MockItYourself
 
-[![CI Status](http://img.shields.io/travis/plain-vanilla-games/MockItYourself.svg?style=flat)](https://travis-ci.org/Jóhann Þ. Bergþórsson/MockItYourself)
+[![CI Status](http://img.shields.io/travis/plain-vanilla-games/MockItYourself.svg?style=flat)](https://travis-ci.org/plain-vanilla-games/MockItYourself)
 [![Version](https://img.shields.io/cocoapods/v/MockItYourself.svg?style=flat)](http://cocoapods.org/pods/MockItYourself)
 [![License](https://img.shields.io/cocoapods/l/MockItYourself.svg?style=flat)](http://cocoapods.org/pods/MockItYourself)
 [![Platform](https://img.shields.io/cocoapods/p/MockItYourself.svg?style=flat)](http://cocoapods.org/pods/MockItYourself)
