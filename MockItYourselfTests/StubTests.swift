@@ -53,4 +53,10 @@ class StubTests: XCTestCase {
         XCTAssertEqual(actualReturn, expectedReturn)
     }
     
+    func test_can_stub_to_return_nil() {
+        stub(mockExample, andReturnValue: nil) { self.mockExample.propertyImplicitlyUnwrapped }
+        let actualReturn = mockExample.propertyImplicitlyUnwrapped
+        
+        XCTAssertEqual(actualReturn, nil)
+    }
 }
