@@ -1,15 +1,14 @@
 //
-//  VerifyArgumentsTests.swift
+//  VerifyTests.swift
 //  MockItYourself
 //
 //  Created by Jóhann Þorvaldur Bergþórsson on 09/05/16.
-//
 //
 
 import XCTest
 @testable import MockItYourself
 
-class VerifyArgumentsTests: XCTestCase {
+class VerifyTests: XCTestCase {
     
     var mockExample: MockExampleClass!
     
@@ -50,7 +49,7 @@ class VerifyArgumentsTests: XCTestCase {
         mockExample.methodWithArgs0()
         
         do {
-            try mockExample.verify(2) { self.mockExample.methodWithArgs0() }
+            try mockExample.verify(expectedCallCount: 2) { self.mockExample.methodWithArgs0() }
         } catch {
             success = true
         }
@@ -70,7 +69,7 @@ class VerifyArgumentsTests: XCTestCase {
         
         mockExample.methodWithArgs2(arg1, arg2: arg2)
         
-        verify(mockExample) { self.mockExample.methodWithArgs2(any(), arg2: nil) }
+        verify(mockExample, checkArguments: false) { self.mockExample.methodWithArgs2(any(), arg2: nil) }
     }
     
     func test_verify_asserts_if_method_is_not_called() {
@@ -91,7 +90,50 @@ class VerifyArgumentsTests: XCTestCase {
         
         mockExample.methodWithArgs2(arg1, arg2: arg2)
         
-        verifyArguments(mockExample) { self.mockExample.methodWithArgs2(arg1, arg2: arg2) }
+        verify(mockExample, checkArguments: true) { self.mockExample.methodWithArgs2(arg1, arg2: arg2) }
+    }
+    
+    func test_can_verify_method_call_and_check_if_correct_arguments_with_expected_number_of_calls() {
+        let arg1 = "arg1"
+        let arg2: Selector = #selector(NSString.substringToIndex(_:))
+        
+        mockExample.methodWithArgs2(arg1, arg2: arg2)
+        mockExample.methodWithArgs2(arg1, arg2: arg2)
+        
+        verify(mockExample, checkArguments: true, expectedCallCount: 2) { self.mockExample.methodWithArgs2(arg1, arg2: arg2) }
+    }
+    
+    func test_asserts_if_checking_if_correct_arguments_with_expected_number_of_calls_if_call_number_mismatch() {
+        let arg1 = "arg1"
+        let arg2: Selector = #selector(NSString.substringToIndex(_:))
+        
+        mockExample.methodWithArgs2(arg1, arg2: arg2)
+        
+        var success = false
+        do {
+            try mockExample.verify(checkArguments: true, expectedCallCount: 2) { self.mockExample.methodWithArgs2(arg1, arg2: arg2) }
+        } catch {
+            success = true
+        }
+        
+        XCTAssertTrue(success)
+    }
+    
+    func test_asserts_if_checking_if_correct_arguments_with_expected_number_of_calls_if_one_call_has_different_arguments() {
+        let arg1 = "arg1"
+        let arg2: Selector = #selector(NSString.substringToIndex(_:))
+        
+        mockExample.methodWithArgs2(arg1, arg2: arg2)
+        mockExample.methodWithArgs2("different argument", arg2: arg2)
+        
+        var success = false
+        do {
+            try mockExample.verify(checkArguments: true, expectedCallCount: 2) { self.mockExample.methodWithArgs2(arg1, arg2: arg2) }
+        } catch {
+            success = true
+        }
+        
+        XCTAssertTrue(success)
     }
     
     func test_can_verify_method_call_and_check_if_argument_is_optional() {
@@ -99,7 +141,7 @@ class VerifyArgumentsTests: XCTestCase {
         
         mockExample.methodWithArgs1(arg1)
         
-        verifyArguments(mockExample) { self.mockExample.methodWithArgs1(arg1) }
+        verify(mockExample, checkArguments: true) { self.mockExample.methodWithArgs1(arg1) }
     }
     
     func test_verify_arguments_assert_if_method_is_not_called_at_all() {
@@ -109,7 +151,7 @@ class VerifyArgumentsTests: XCTestCase {
         var success = false
         
         do {
-            try mockExample.verifyArguments() { self.mockExample.methodWithArgs2(arg1, arg2: arg2) }
+            try mockExample.verify(checkArguments: true) { self.mockExample.methodWithArgs2(arg1, arg2: arg2) }
         } catch {
             success = true
         }
@@ -126,7 +168,7 @@ class VerifyArgumentsTests: XCTestCase {
         var success = false
         
         do {
-            try mockExample.verifyArguments() { self.mockExample.methodWithArgs2(arg1, arg2: arg2) }
+            try mockExample.verify(checkArguments: true) { self.mockExample.methodWithArgs2(arg1, arg2: arg2) }
         } catch {
             success = true
         }

@@ -14,16 +14,8 @@ public protocol MockItYourself {
 }
 
 extension MockItYourself {
-    func verify(expectedCallCount: Int, method: () -> ()) throws {
-        try callHandler.verify(expectedCallCount, method: method)
-    }
-    
-    func verify(method: () -> ()) throws {
-        try callHandler.verify(method)
-    }
-    
-    func verifyArguments(method: () -> ()) throws {
-        try callHandler.verifyArguments(method)
+    func verify(expectedCallCount expectedCallCount: Int? = nil, checkArguments: Bool = true, method: () -> ()) throws {
+        try callHandler.verify(expectedCallCount: expectedCallCount, checkArguments: checkArguments, method: method)
     }
     
     func reject(method: () -> ()) throws {
@@ -35,25 +27,9 @@ extension MockItYourself {
     }
 }
 
-public func verify(mock: MockItYourself, message: String = "", file: StaticString = #file, line: UInt = #line, verify: () -> ()) {
+public func verify(mock: MockItYourself, message: String = "", file: StaticString = #file, line: UInt = #line, expectedCallCount: Int? = nil, checkArguments: Bool = true, verify: () -> ()) {
     do {
-        try mock.verify(verify)
-    } catch let error {
-        XCTFail("\(error)", file:  file, line: line)
-    }
-}
-
-public func verify(mock: MockItYourself, message: String = "", file: StaticString = #file, line: UInt = #line, expectedCallCount: Int, verify: () -> ()) {
-    do {
-        try mock.verify(expectedCallCount, method: verify)
-    } catch let error {
-        XCTFail("\(error)", file:  file, line: line)
-    }
-}
-
-public func verifyArguments(mock: MockItYourself, message: String = "", file: StaticString = #file, line: UInt = #line, verify: () -> ()) {
-    do {
-        try mock.verifyArguments(verify)
+        try mock.verify(expectedCallCount: expectedCallCount, checkArguments: checkArguments, method: verify)
     } catch let error {
         XCTFail("\(error)", file:  file, line: line)
     }

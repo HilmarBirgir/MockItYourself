@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import MockItYourself
+import MockItYourself
 
 class StubTests: XCTestCase {
     
@@ -28,7 +28,7 @@ class StubTests: XCTestCase {
     func test_can_stub_method_to_return_value() throws {
         let expectedReturn = "expected return"
         
-        try mockExample.stubMethod({ self.mockExample.methodWithArgs1("") }, andReturnValue: expectedReturn)
+        stub(mockExample, andReturnValue: expectedReturn) { self.mockExample.methodWithArgs1("") }
         let actualReturn = mockExample.methodWithArgs1("")
         
         XCTAssertEqual(actualReturn, expectedReturn)
@@ -37,7 +37,7 @@ class StubTests: XCTestCase {
     func test_can_stub_property() throws {
         let expectedReturn = "expected return"
         
-        try mockExample.stubMethod({ self.mockExample.property }, andReturnValue: expectedReturn)
+        stub(mockExample, andReturnValue: expectedReturn) { self.mockExample.property }
         let actualReturn = mockExample.property
         
         XCTAssertEqual(actualReturn, expectedReturn)

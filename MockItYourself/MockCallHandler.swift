@@ -47,30 +47,23 @@ public class MockCallHandler {
         let stubbedReturn = stubbedReturns[callName]
         return stubbedReturn == nil ? returnValue : stubbedReturn is ExpectedNil ? nil : stubbedReturn
     }
-    
-    func verify(method: () -> ()) throws {
-        let methodName = try captureMethodName(method)
-        if recordedCalls[methodName] == nil {
-            throw MockVerificationError.MethodNotCalled
-        }
-    }
 
-    func verify(expectedCallCount: Int, method: () -> ()) throws {
-        let methodName = try captureMethodName(method)
-        
-        let actualCallCount = recordedCalls[methodName]?.count ?? 0
-        if expectedCallCount != actualCallCount {
-            throw MockVerificationError.MethodCallCountMismatch(actualCallCount, expectedCallCount)
-        }
-    }
-    
-    func verifyArguments(method: () -> ()) throws {
+    func verify(expectedCallCount expectedCallCount: Int? = nil, checkArguments: Bool = false, method: () -> ()) throws {
         let methodName = try captureMethodName(method)
         
         if let callHistory = recordedCalls[methodName] {
-            let matchFound = callHistory.match()
-            if matchFound == false {
-                throw MockVerificationError.ArgumentsMismatch()
+            if let expectedCallCount = expectedCallCount {
+                let actualCallCount = callHistory.count ?? 0
+                if expectedCallCount != actualCallCount {
+                    throw MockVerificationError.MethodCallCountMismatch(actualCallCount, expectedCallCount)
+                }
+            }
+            
+            if checkArguments {
+                let matchFound = callHistory.match(checkAll: expectedCallCount != nil)
+                if matchFound == false {
+                    throw MockVerificationError.ArgumentsMismatch()
+                }
             }
         } else {
             throw MockVerificationError.MethodNotCalled
@@ -81,7 +74,7 @@ public class MockCallHandler {
         var success = false
         
         do {
-            try verify(method)
+            try verify(method: method)
         } catch MockVerificationError.MethodNotMocked {
             throw MockVerificationError.MethodNotMocked
         } catch {
@@ -102,16 +95,7 @@ public class MockCallHandler {
 
 protocol CallHistory {
     var count: Int { get }
-    func match() -> Bool
-}
-
-func any(list: [Bool]) -> Bool {
-    for x in list {
-        if x {
-            return true
-        }
-    }
-    return false
+    func match(checkAll checkAll: Bool) -> Bool
 }
 
 class CallHistoryRecorder<A: Equatable> : CallHistory {
@@ -134,9 +118,13 @@ class CallHistoryRecorder<A: Equatable> : CallHistory {
         }
     }
     
-    func match() -> Bool {
+    func match(checkAll checkAll: Bool = false) -> Bool {
         if let callToLookFor = verificationCall {
-            return any(history.map({ $0 == callToLookFor }))
+            if checkAll {
+                return history.map({ $0 == callToLookFor }).contains(false) == false
+            } else {
+                return history.contains { $0 == callToLookFor }
+            }
         } else {
             return false
         }

@@ -11,7 +11,7 @@
 		E2B399FC1CE0B76D00B3C0FB /* MockArguments.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2FE3B2B1CDFF1170082B477 /* MockArguments.swift */; };
 		E2B399FD1CE0B76D00B3C0FB /* MockCallHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2FE3B2C1CDFF1170082B477 /* MockCallHandler.swift */; };
 		E2B399FE1CE0B76D00B3C0FB /* MockItYourself.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2FE3B2D1CDFF1170082B477 /* MockItYourself.swift */; };
-		E2B39A041CE0DB3D00B3C0FB /* VerifyArgumentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B39A031CE0DB3D00B3C0FB /* VerifyArgumentsTests.swift */; };
+		E2B39A041CE0DB3D00B3C0FB /* VerifyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B39A031CE0DB3D00B3C0FB /* VerifyTests.swift */; };
 		E2B39A061CE0DBE000B3C0FB /* RejectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B39A051CE0DBE000B3C0FB /* RejectTests.swift */; };
 		E2B39A081CE0DC1D00B3C0FB /* StubTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B39A071CE0DC1D00B3C0FB /* StubTests.swift */; };
 		E2B39A0A1CE0DC6F00B3C0FB /* TestFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B39A091CE0DC6F00B3C0FB /* TestFixtures.swift */; };
@@ -29,7 +29,7 @@
 
 /* Begin PBXFileReference section */
 		E2B399F31CE0B76300B3C0FB /* MockItYourself.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MockItYourself.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		E2B39A031CE0DB3D00B3C0FB /* VerifyArgumentsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerifyArgumentsTests.swift; sourceTree = "<group>"; };
+		E2B39A031CE0DB3D00B3C0FB /* VerifyTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerifyTests.swift; sourceTree = "<group>"; };
 		E2B39A051CE0DBE000B3C0FB /* RejectTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RejectTests.swift; sourceTree = "<group>"; };
 		E2B39A071CE0DC1D00B3C0FB /* StubTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StubTests.swift; sourceTree = "<group>"; };
 		E2B39A091CE0DC6F00B3C0FB /* TestFixtures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestFixtures.swift; sourceTree = "<group>"; };
@@ -94,7 +94,7 @@
 			isa = PBXGroup;
 			children = (
 				E2FE3B211CDFF0DE0082B477 /* Info.plist */,
-				E2B39A031CE0DB3D00B3C0FB /* VerifyArgumentsTests.swift */,
+				E2B39A031CE0DB3D00B3C0FB /* VerifyTests.swift */,
 				E2B39A051CE0DBE000B3C0FB /* RejectTests.swift */,
 				E2B39A071CE0DC1D00B3C0FB /* StubTests.swift */,
 				E2B39A091CE0DC6F00B3C0FB /* TestFixtures.swift */,
@@ -238,7 +238,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E2B39A061CE0DBE000B3C0FB /* RejectTests.swift in Sources */,
-				E2B39A041CE0DB3D00B3C0FB /* VerifyArgumentsTests.swift in Sources */,
+				E2B39A041CE0DB3D00B3C0FB /* VerifyTests.swift in Sources */,
 				E2B39A081CE0DC1D00B3C0FB /* StubTests.swift in Sources */,
 				E2B39A0A1CE0DC6F00B3C0FB /* TestFixtures.swift in Sources */,
 			);
