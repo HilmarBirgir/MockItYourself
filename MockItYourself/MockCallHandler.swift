@@ -10,21 +10,24 @@ public class MockCallHandler {
     
     private var recordedCalls = [String: CallHistory]()
     private var stubbedReturns = [String: Any]()
-    private var expectingFunctionCall = false
+    private var isCapturingMethodCall = false
 
-    private var lastCalledFunctionName = ""
+    private var lastCalledMethodName = ""
 
     public init() {}
     
-    private func captureMethodName(method: () -> ()) throws -> String {
-        expectingFunctionCall = true
-        method()
-        if expectingFunctionCall {
+    private func captureMethodName(captureBlock: () -> ()) throws -> String {
+        isCapturingMethodCall = true
+        captureBlock()
+        // The above block will contain a call to the method that is being mocked.
+        // registerCall will set isCapturingMethodCall to false
+        // and set lastCalledMethodName
+        if isCapturingMethodCall {
             throw MockVerificationError.MethodNotMocked
         }
         
-        let methodName = lastCalledFunctionName
-        lastCalledFunctionName = ""
+        let methodName = lastCalledMethodName
+        lastCalledMethodName = ""
 
         return methodName
     }
@@ -34,48 +37,47 @@ public class MockCallHandler {
     }
     
     public func registerCall<A: Equatable>(args args: A, callName: String = #function) {
-        lastCalledFunctionName = callName
-        
-        if let callHistory = recordedCalls[callName] as? CallHistoryRecorder<A> {
-            callHistory.record(args, verificationCall: expectingFunctionCall)
-        } else if expectingFunctionCall == false {
-            recordedCalls[callName] = CallHistoryRecorder(firstArgs: args)
-        }
-        
-        expectingFunctionCall = false
+        recordCall(args: args, callName: callName)
     }
     
-    public func registerCall<R: Any>(defaultReturnValue defaultReturnValue: R, callName: String = #function) -> R? {
+    public func registerCall<R: Any>(defaultReturnValue defaultReturnValue: R?, callName: String = #function) -> R? {
         return registerCall(args: Args0(), defaultReturnValue: defaultReturnValue, callName: callName)
     }
     
-    public func registerCall<A: Equatable, R: Any>(args args: A, defaultReturnValue: R, callName: String = #function) -> R? {
-        return registerCall(args: args, defaultReturnValue: defaultReturnValue, callName:callName)
+    public func registerCall<A: Equatable, R: Any>(args args: A, defaultReturnValue: R?, callName: String = #function) -> R? {
+        recordCall(args: args, callName: callName)
+        
+        if let stubbedReturn = stubbedReturns[callName] {
+            return stubbedReturn as? R
+        } else {
+            return defaultReturnValue
+        }
     }
 
     public func registerCall<R: Any>(defaultReturnValue defaultReturnValue: R, callName: String = #function) -> R {
         return registerCall(args: Args0(), defaultReturnValue: defaultReturnValue, callName: callName)
     }
-    
 
     public func registerCall<A: Equatable, R: Any>(args args: A, defaultReturnValue: R, callName: String = #function) -> R {
-        lastCalledFunctionName = callName
+        recordCall(args: args, callName: callName)
         
-        if let callHistory = recordedCalls[callName] as? CallHistoryRecorder<A> {
-            callHistory.record(args, verificationCall: expectingFunctionCall)
-        } else if expectingFunctionCall == false {
-            recordedCalls[callName] = CallHistoryRecorder(firstArgs: args)
-        }
-        
-        expectingFunctionCall = false
-        
-        let stubbedReturn = stubbedReturns[callName]
-        
-        if stubbedReturn != nil {
+        if let stubbedReturn = stubbedReturns[callName] {
             return stubbedReturn as! R
         } else {
             return defaultReturnValue
         }
+    }
+    
+    func recordCall<A: Equatable>(args args: A, callName: String) {
+        lastCalledMethodName = callName
+        
+        if let callHistory = recordedCalls[callName] as? CallHistoryRecorder<A> {
+            callHistory.record(args, verificationCall: isCapturingMethodCall)
+        } else if isCapturingMethodCall == false {
+            recordedCalls[callName] = CallHistoryRecorder(firstArgs: args)
+        }
+        
+        isCapturingMethodCall = false
     }
 
     func verify(expectedCallCount expectedCallCount: Int? = nil, checkArguments: Bool = false, method: () -> ()) throws {

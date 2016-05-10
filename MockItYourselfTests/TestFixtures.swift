@@ -12,6 +12,7 @@ import MockItYourself
 protocol ExampleProtocol {
     
     var property: String { get }
+    var propertyImplicitlyUnwrapped: String! { get }
     
     func methodThatIsNotMocked()
     
@@ -34,6 +35,10 @@ class MockExampleClass: ExampleProtocol, MockItYourself {
     static let defaultReturnValue = "default return value"
     
     var property: String {
+        return callHandler.registerCall(defaultReturnValue: MockExampleClass.defaultReturnValue)
+    }
+    
+    var propertyImplicitlyUnwrapped: String! {
         return callHandler.registerCall(defaultReturnValue: MockExampleClass.defaultReturnValue)
     }
     
