@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E2B399F61CE0B76300B3C0FB /* MockItYourself.h in Headers */ = {isa = PBXBuildFile; fileRef = E2B399F51CE0B76300B3C0FB /* MockItYourself.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E2B399FB1CE0B76D00B3C0FB /* ExpectedNil.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2FE3B2A1CDFF1170082B477 /* ExpectedNil.swift */; };
 		E2B399FC1CE0B76D00B3C0FB /* MockArguments.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2FE3B2B1CDFF1170082B477 /* MockArguments.swift */; };
 		E2B399FD1CE0B76D00B3C0FB /* MockCallHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2FE3B2C1CDFF1170082B477 /* MockCallHandler.swift */; };
@@ -30,8 +29,6 @@
 
 /* Begin PBXFileReference section */
 		E2B399F31CE0B76300B3C0FB /* MockItYourself.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MockItYourself.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		E2B399F51CE0B76300B3C0FB /* MockItYourself.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MockItYourself.h; sourceTree = "<group>"; };
-		E2B399F71CE0B76300B3C0FB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E2B39A031CE0DB3D00B3C0FB /* VerifyArgumentsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerifyArgumentsTests.swift; sourceTree = "<group>"; };
 		E2B39A051CE0DBE000B3C0FB /* RejectTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RejectTests.swift; sourceTree = "<group>"; };
 		E2B39A071CE0DC1D00B3C0FB /* StubTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StubTests.swift; sourceTree = "<group>"; };
@@ -63,21 +60,11 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		E2B399F41CE0B76300B3C0FB /* MockItYourself */ = {
-			isa = PBXGroup;
-			children = (
-				E2B399F51CE0B76300B3C0FB /* MockItYourself.h */,
-				E2B399F71CE0B76300B3C0FB /* Info.plist */,
-			);
-			path = MockItYourself;
-			sourceTree = "<group>";
-		};
 		E2E9C21F1CDFF0A000D8168A = {
 			isa = PBXGroup;
 			children = (
 				E2FE3B121CDFF0DE0082B477 /* MockItYourself */,
 				E2FE3B1E1CDFF0DE0082B477 /* MockItYourselfTests */,
-				E2B399F41CE0B76300B3C0FB /* MockItYourself */,
 				E2FE3B111CDFF0DD0082B477 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -122,7 +109,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E2B399F61CE0B76300B3C0FB /* MockItYourself.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -475,6 +461,7 @@
 				E2B399FA1CE0B76300B3C0FB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		E2E9C2231CDFF0A000D8168A /* Build configuration list for PBXProject "MockItYourself" */ = {
 			isa = XCConfigurationList;
