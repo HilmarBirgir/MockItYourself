@@ -98,24 +98,6 @@ protocol CallHistory {
     func match(checkAll checkAll: Bool) -> Bool
 }
 
-func any(list: [Bool]) -> Bool {
-    for x in list {
-        if x {
-            return true
-        }
-    }
-    return false
-}
-
-func all(list: [Bool]) -> Bool {
-    for x in list {
-        if x == false {
-            return false
-        }
-    }
-    return true
-}
-
 class CallHistoryRecorder<A: Equatable> : CallHistory {
     var verificationCall: A?
     var history: [A]
@@ -139,7 +121,7 @@ class CallHistoryRecorder<A: Equatable> : CallHistory {
     func match(checkAll checkAll: Bool = false) -> Bool {
         if let callToLookFor = verificationCall {
             if checkAll {
-                return all(history.map({ $0 == callToLookFor }))
+                return history.map({ $0 == callToLookFor }).contains(false) == false
             } else {
                 return history.contains { $0 == callToLookFor }
             }
