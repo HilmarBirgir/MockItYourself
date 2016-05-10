@@ -19,7 +19,7 @@ public class MockCallHandler {
     private func captureMethodName(method: () -> ()) throws -> String {
         expectingFunctionCall = true
         method()
-        if (expectingFunctionCall) {
+        if expectingFunctionCall {
             throw MockVerificationError.MethodNotMocked
         }
         
@@ -48,7 +48,7 @@ public class MockCallHandler {
         return stubbedReturn == nil ? returnValue : stubbedReturn is ExpectedNil ? nil : stubbedReturn
     }
     
-    func verify(method: () -> ()) throws  {
+    func verify(method: () -> ()) throws {
         let methodName = try captureMethodName(method)
         if recordedCalls[methodName] == nil {
             throw MockVerificationError.MethodNotCalled
@@ -72,9 +72,7 @@ public class MockCallHandler {
             if matchFound == false {
                 throw MockVerificationError.ArgumentsMismatch()
             }
-        }
-        else
-        {
+        } else {
             throw MockVerificationError.MethodNotCalled
         }
     }
