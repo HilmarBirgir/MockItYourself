@@ -20,7 +20,7 @@ class StubTests: XCTestCase {
     }
     
     func test_not_stubbed_method_returns_default_value() {
-        let actualReturn = mockExample.methodWithArgs1("")
+        let actualReturn = mockExample.methodWithArgs1Returns("")
         
         XCTAssertEqual(actualReturn, MockExampleClass.defaultReturnValue)
     }
@@ -28,8 +28,8 @@ class StubTests: XCTestCase {
     func test_can_stub_method_to_return_value() throws {
         let expectedReturn = "expected return"
         
-        stub(mockExample, andReturnValue: expectedReturn) { self.mockExample.methodWithArgs1("") }
-        let actualReturn = mockExample.methodWithArgs1("")
+        stub(mockExample, andReturnValue: expectedReturn) { self.mockExample.methodWithArgs1Returns("") }
+        let actualReturn = mockExample.methodWithArgs1Returns("")
         
         XCTAssertEqual(actualReturn, expectedReturn)
     }

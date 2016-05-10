@@ -167,7 +167,7 @@ class MockDependency: Dependency, MockItYourself {
     let callHandler = MockCallHandler()
     
     override func slowAndExpensiveMethod(arg1: String, arg2: Int) -> Double {
-        return callHandler.registerCall(args: Args2(arg(arg1), arg(arg2)), defaultReturnValue: 50) as! Double
+        return callHandler.registerCall(args: Args2(arg(arg1), arg(arg2)), defaultReturnValue: 50)
     }
 }
 ```
