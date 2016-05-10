@@ -142,6 +142,94 @@ class MockExampleTests: XCTestCase {
 
 ```
 
+## Usage
+
+`MockItYourself` helps reduce boilerplate when manually creating mocks. Let's imagine that we have the following class:
+
+```swift
+class Dependency {
+    func slowAndExpensiveMethod(arg1: String, arg2: Int) -> Double {
+        return 40.0
+    }
+}
+```
+
+Creating the mock is simple:
+
+1. Create a subclass of `Dependency`.
+2. Implement the `MockItYourself` protocol by adding a `callHandler` property.
+3. Register the methods that you want to mock or stub.
+
+```swift
+import MockItYourself
+
+class MockDependency: Dependency, MockItYourself {
+    let callHandler = MockCallHandler()
+    
+    override func slowAndExpensiveMethod(arg1: String, arg2: Int) -> Double {
+        return callHandler.registerCall(args: Args2(arg(arg1), arg(arg2)), defaultReturnValue: 50) as! Double
+    }
+}
+```
+
+### Verify
+
+`MockItYourself` allows you to verify if methods on your mocks are called with the
+
+To verify a method was called:
+
+```swift
+func test_verify() {
+    mock.slowAndExpensiveMethod("A", arg2: 1)
+    
+    verify(mock) { self.mock.slowAndExpensiveMethod(any(), arg2: any()) }
+}
+```
+
+To verify a method was called n number of times:
+
+```swift
+func test_verify_number_of_calls() {
+    mock.slowAndExpensiveMethod("A", arg2: 1)
+    mock.slowAndExpensiveMethod("A", arg2: 1)
+
+    verify(mock, expectedCallCount: 2) { self.mock.slowAndExpensiveMethod(any(), arg2: any()) }
+}
+```
+
+To verify a method was called with the specific arguments:
+
+```swift
+func test_verify_with_arguments() {
+    mock.slowAndExpensiveMethod("A", arg2: 1)
+
+    verify(mock, checkArguments: true) { self.mock.slowAndExpensiveMethod("A", arg2: 1) }
+}
+```
+
+### Reject
+
+To verify a method was not called:
+
+```swift
+func test_reject() {
+    reject(mock) { self.mock.slowAndExpensiveMethod("A", arg2: 1) }
+}
+```
+
+### Stubbing
+
+To stub out the return value of a method or property:
+
+```swift
+func test_stubbing() {
+    stub(mock, andReturnValue: 30) { self.mock.slowAndExpensiveMethod("A", arg2: 1) }
+
+    let returnValue = mock.slowAndExpensiveMethod("A", arg2: 1)
+    XCTAssertEqual(returnValue, 30)
+}
+```
+
 ## Authors
 
 + Alexey Verein, alexey@plainvanillagames.com
