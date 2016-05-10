@@ -14,7 +14,7 @@ public protocol MockItYourself {
 }
 
 extension MockItYourself {
-    func verify(expectedCallCount expectedCallCount: Int? = nil, checkArguments: Bool = false, method: () -> ()) throws {
+    func verify(expectedCallCount expectedCallCount: Int? = nil, checkArguments: Bool = true, method: () -> ()) throws {
         try callHandler.verify(expectedCallCount: expectedCallCount, checkArguments: checkArguments, method: method)
     }
     
@@ -27,7 +27,7 @@ extension MockItYourself {
     }
 }
 
-public func verify(mock: MockItYourself, message: String = "", file: StaticString = #file, line: UInt = #line, expectedCallCount: Int? = nil, checkArguments: Bool = false, verify: () -> ()) {
+public func verify(mock: MockItYourself, message: String = "", file: StaticString = #file, line: UInt = #line, expectedCallCount: Int? = nil, checkArguments: Bool = true, verify: () -> ()) {
     do {
         try mock.verify(expectedCallCount: expectedCallCount, checkArguments: checkArguments, method: verify)
     } catch let error {

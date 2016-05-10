@@ -69,7 +69,7 @@ class VerifyTests: XCTestCase {
         
         mockExample.methodWithArgs2(arg1, arg2: arg2)
         
-        verify(mockExample) { self.mockExample.methodWithArgs2(any(), arg2: nil) }
+        verify(mockExample, checkArguments: false) { self.mockExample.methodWithArgs2(any(), arg2: nil) }
     }
     
     func test_verify_asserts_if_method_is_not_called() {
