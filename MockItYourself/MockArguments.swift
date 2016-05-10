@@ -335,7 +335,7 @@ public class Args10<A1: Equatable, A2: Equatable, A3: Equatable, A4: Equatable, 
     let arg9: Arg<AnyObject, A9>
     let arg10: Arg<AnyObject, A10>
     
-    public init(_ arg1: Arg<AnyObject, A1>, _ arg2: Arg<AnyObject, A2>, _ arg3: Arg<AnyObject, A3>, _ arg4: Arg<AnyObject, A4>, _ arg5: Arg<AnyObject, A5>, _ arg6: Arg<AnyObject, A6>, _ arg7: Arg<AnyObject, A7>, _ arg8: Arg<AnyObject, A8>, _ arg9: Arg<AnyObject, A9>,  _ arg10: Arg<AnyObject, A10>) {
+    public init(_ arg1: Arg<AnyObject, A1>, _ arg2: Arg<AnyObject, A2>, _ arg3: Arg<AnyObject, A3>, _ arg4: Arg<AnyObject, A4>, _ arg5: Arg<AnyObject, A5>, _ arg6: Arg<AnyObject, A6>, _ arg7: Arg<AnyObject, A7>, _ arg8: Arg<AnyObject, A8>, _ arg9: Arg<AnyObject, A9>, _ arg10: Arg<AnyObject, A10>) {
         self.arg1 = arg1
         self.arg2 = arg2
         self.arg3 = arg3
@@ -372,7 +372,7 @@ public class Args11<A1: Equatable, A2: Equatable, A3: Equatable, A4: Equatable, 
     let arg10: Arg<AnyObject, A10>
     let arg11: Arg<AnyObject, A11>
     
-    public init(_ arg1: Arg<AnyObject, A1>, _ arg2: Arg<AnyObject, A2>, _ arg3: Arg<AnyObject, A3>, _ arg4: Arg<AnyObject, A4>, _ arg5: Arg<AnyObject, A5>, _ arg6: Arg<AnyObject, A6>, _ arg7: Arg<AnyObject, A7>, _ arg8: Arg<AnyObject, A8>, _ arg9: Arg<AnyObject, A9>,  _ arg10: Arg<AnyObject, A10>,  _ arg11: Arg<AnyObject, A11>) {
+    public init(_ arg1: Arg<AnyObject, A1>, _ arg2: Arg<AnyObject, A2>, _ arg3: Arg<AnyObject, A3>, _ arg4: Arg<AnyObject, A4>, _ arg5: Arg<AnyObject, A5>, _ arg6: Arg<AnyObject, A6>, _ arg7: Arg<AnyObject, A7>, _ arg8: Arg<AnyObject, A8>, _ arg9: Arg<AnyObject, A9>, _ arg10: Arg<AnyObject, A10>, _ arg11: Arg<AnyObject, A11>) {
         self.arg1 = arg1
         self.arg2 = arg2
         self.arg3 = arg3
