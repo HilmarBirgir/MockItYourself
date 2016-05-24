@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E2B399FB1CE0B76D00B3C0FB /* ExpectedNil.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2FE3B2A1CDFF1170082B477 /* ExpectedNil.swift */; };
 		E2B399FC1CE0B76D00B3C0FB /* MockArguments.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2FE3B2B1CDFF1170082B477 /* MockArguments.swift */; };
 		E2B399FD1CE0B76D00B3C0FB /* MockCallHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2FE3B2C1CDFF1170082B477 /* MockCallHandler.swift */; };
 		E2B399FE1CE0B76D00B3C0FB /* MockItYourself.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2FE3B2D1CDFF1170082B477 /* MockItYourself.swift */; };
@@ -36,7 +35,6 @@
 		E2FE3B151CDFF0DE0082B477 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E2FE3B1A1CDFF0DE0082B477 /* MockItYourselfTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MockItYourselfTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2FE3B211CDFF0DE0082B477 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E2FE3B2A1CDFF1170082B477 /* ExpectedNil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpectedNil.swift; sourceTree = "<group>"; };
 		E2FE3B2B1CDFF1170082B477 /* MockArguments.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockArguments.swift; sourceTree = "<group>"; };
 		E2FE3B2C1CDFF1170082B477 /* MockCallHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockCallHandler.swift; sourceTree = "<group>"; };
 		E2FE3B2D1CDFF1170082B477 /* MockItYourself.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockItYourself.swift; sourceTree = "<group>"; };
@@ -81,7 +79,6 @@
 		E2FE3B121CDFF0DE0082B477 /* MockItYourself */ = {
 			isa = PBXGroup;
 			children = (
-				E2FE3B2A1CDFF1170082B477 /* ExpectedNil.swift */,
 				E2FE3B2B1CDFF1170082B477 /* MockArguments.swift */,
 				E2FE3B2C1CDFF1170082B477 /* MockCallHandler.swift */,
 				E2FE3B2D1CDFF1170082B477 /* MockItYourself.swift */,
@@ -227,7 +224,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E2B399FC1CE0B76D00B3C0FB /* MockArguments.swift in Sources */,
-				E2B399FB1CE0B76D00B3C0FB /* ExpectedNil.swift in Sources */,
 				E2B399FD1CE0B76D00B3C0FB /* MockCallHandler.swift in Sources */,
 				E2B399FE1CE0B76D00B3C0FB /* MockItYourself.swift in Sources */,
 			);

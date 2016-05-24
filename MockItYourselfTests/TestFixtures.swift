@@ -9,6 +9,14 @@
 import Foundation
 import MockItYourself
 
+class ReturnValueClass {
+    let value: Int
+    
+    init(value: Int) {
+        self.value = value
+    }
+}
+
 protocol ExampleProtocol {
     
     var property: String { get }
@@ -36,6 +44,10 @@ class MockExampleClass: ExampleProtocol, MockItYourself {
     
     var property: String {
         return callHandler.registerCall(defaultReturnValue: MockExampleClass.defaultReturnValue)
+    }
+    
+    var propertyOptional: String? {
+        return callHandler.registerCall(defaultReturnValue: nil)
     }
     
     var propertyImplicitlyUnwrapped: String! {
@@ -68,6 +80,10 @@ class MockExampleClass: ExampleProtocol, MockItYourself {
     
     func methodWithArgs1ReturnsOptional(arg1: String) -> String? {
         return callHandler.registerCall(args: Args1(arg(arg1)), defaultReturnValue: nil)
+    }
+    
+    func methodWithArgs1ReturnsClass(arg1: String) -> ReturnValueClass {
+        return callHandler.registerCall(args: Args1(arg(arg1)), defaultReturnValue: ReturnValueClass(value: 1))
     }
     
     func methodWithArgs1Returns(arg1: String) -> String {

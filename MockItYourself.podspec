@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "MockItYourself"
-  s.version          = "1.0.0"
+  s.version          = "1.1.0"
   s.summary          = "MockItYourself is a simple mocking framework for Swift"
   s.description      = <<-DESC
 MockItYourself is a mocking framework for Swift. 
