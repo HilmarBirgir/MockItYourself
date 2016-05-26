@@ -6,17 +6,25 @@
 //  Copyright © 2016 Plain Vanilla Games. All rights reserved.
 //
 
+enum StubRecorderMode {
+    case Recording(Stub, Bool)
+    case Off
+}
+
 public class MockCallHandler {
-    
     private var recordedCalls = [String: CallHistory]()
-    private var stubbedReturns = [String: Any]()
+
+    private var stubs = [String: StubRegistry]()
+    
+    private var stubRecorderMode: StubRecorderMode = .Off
+    
     private var isCapturingMethodCall = false
 
-    private var lastCalledMethodName = ""
+    private var lastMethodCallName = ""
 
     public init() {}
     
-    private func captureMethodName(captureBlock: () -> ()) throws -> String {
+    private func captureMethodCall(captureBlock: () -> ()) throws -> String {
         isCapturingMethodCall = true
         captureBlock()
         // The above block will contain a call to the method that is being mocked.
@@ -26,62 +34,97 @@ public class MockCallHandler {
             throw MockVerificationError.MethodNotMocked
         }
         
-        let methodName = lastCalledMethodName
-        lastCalledMethodName = ""
+        let methodCallName = lastMethodCallName
+        lastMethodCallName = ""
 
-        return methodName
+        return methodCallName
     }
 
-    public func registerCall(callName: String = #function) {
-        registerCall(args: Args0(), callName: callName)
+    public func registerCall(methodName: String = #function) {
+        registerCall(args: Args0(), methodName: methodName)
     }
     
-    public func registerCall<A: Equatable>(args args: A, callName: String = #function) {
-        recordCall(args: args, callName: callName)
+    public func registerCall<A: Equatable>(args args: A, methodName: String = #function) {
+        recordCall(methodName: methodName, args: args)
     }
     
-    public func registerCall<R: Any>(defaultReturnValue defaultReturnValue: R?, callName: String = #function) -> R? {
-        return registerCall(args: Args0(), defaultReturnValue: defaultReturnValue, callName: callName)
+    public func registerCall<R: Any>(defaultReturnValue defaultReturnValue: R?, methodName: String = #function) -> R? {
+        return registerCall(args: Args0(), defaultReturnValue: defaultReturnValue, methodName: methodName)
     }
     
-    public func registerCall<A: Equatable, R: Any>(args args: A, defaultReturnValue: R?, callName: String = #function) -> R? {
-        recordCall(args: args, callName: callName)
+    public func registerCall<A: Equatable, R: Any>(args args: A, defaultReturnValue: R?, methodName: String = #function) -> R? {
+        let methodName = recordCall(methodName: methodName, args: args)
         
-        if let stubbedReturn = stubbedReturns[callName] {
-            return stubbedReturn as? R
+        switch stubRecorderMode {
+        case .Recording(let stubbedValue, let checkArguments):
+            recordStub(methodName: methodName, args: args, stubbedValue: stubbedValue, checkArguments: checkArguments)
+            
+            stubRecorderMode = .Off
+        default:
+            break
+        }
+        
+        if let recordedStubs = stubs[methodName] as? StubRegistryRecorder<A>, stub = recordedStubs.getStubbedValue(args) {
+            return stub.value as? R
         } else {
             return defaultReturnValue
         }
     }
 
-    public func registerCall<R: Any>(defaultReturnValue defaultReturnValue: R, callName: String = #function) -> R {
-        return registerCall(args: Args0(), defaultReturnValue: defaultReturnValue, callName: callName)
+    public func registerCall<R: Any>(defaultReturnValue defaultReturnValue: R, methodName: String = #function) -> R {
+        return registerCall(args: Args0(), defaultReturnValue: defaultReturnValue, methodName: methodName)
     }
 
-    public func registerCall<A: Equatable, R: Any>(args args: A, defaultReturnValue: R, callName: String = #function) -> R {
-        recordCall(args: args, callName: callName)
+    public func registerCall<A: Equatable, R: Any>(args args: A, defaultReturnValue: R, methodName: String = #function) -> R {
+        let methodName = recordCall(methodName: methodName, args: args)
         
-        if let stubbedReturn = stubbedReturns[callName] {
-            return stubbedReturn as! R
+        switch stubRecorderMode {
+        case .Recording(let stubbedValue, let checkArguments):
+            recordStub(methodName: methodName, args: args, stubbedValue: stubbedValue, checkArguments: checkArguments)
+            
+            stubRecorderMode = .Off
+        default:
+            break
+        }
+        
+        if let recordedStubs = stubs[methodName] as? StubRegistryRecorder<A>, stub = recordedStubs.getStubbedValue(args) {
+            if let stubbedValue = stub.value {
+                return stubbedValue as! R
+            } else {
+                // This case actually doesn't make sense.
+                // It might make sense to throw an exception here
+                return defaultReturnValue
+            }
         } else {
             return defaultReturnValue
         }
     }
     
-    func recordCall<A: Equatable>(args args: A, callName: String) {
-        lastCalledMethodName = callName
+    func recordCall<A: Equatable>(methodName methodName: String, args: A) -> String {
+        lastMethodCallName = methodName
         
-        if let callHistory = recordedCalls[callName] as? CallHistoryRecorder<A> {
+        if let callHistory = recordedCalls[methodName] as? CallHistoryRecorder<A> {
             callHistory.record(args, verificationCall: isCapturingMethodCall)
-        } else if isCapturingMethodCall == false {
-            recordedCalls[callName] = CallHistoryRecorder(firstArgs: args)
+        } else {
+            recordedCalls[methodName] = CallHistoryRecorder(firstArgs: args,
+                                                            verificationCall: isCapturingMethodCall)
         }
         
         isCapturingMethodCall = false
+        
+        return methodName
+    }
+    
+    func recordStub<A: Equatable>(methodName methodName: String, args: A, stubbedValue: Stub, checkArguments: Bool) {
+        if let stubRecorder = stubs[methodName] as? StubRegistryRecorder<A> {
+            stubRecorder.stub(args: args, stubbedValue: stubbedValue)
+        } else {
+            stubs[methodName] = StubRegistryRecorder(args: args, stubbedValue: stubbedValue, checkArguments: checkArguments)
+        }
     }
 
     func verify(expectedCallCount expectedCallCount: Int? = nil, checkArguments: Bool = false, method: () -> ()) throws {
-        let methodName = try captureMethodName(method)
+        let methodName = try captureMethodCall(method)
         
         if let callHistory = recordedCalls[methodName] {
             if let expectedCallCount = expectedCallCount {
@@ -94,7 +137,12 @@ public class MockCallHandler {
             if checkArguments {
                 let matchFound = callHistory.match(checkAll: expectedCallCount != nil)
                 if matchFound == false {
-                    throw MockVerificationError.ArgumentsMismatch()
+                    if callHistory.count == 0 {
+                        throw MockVerificationError.MethodNotCalled
+                    } else {
+                        throw MockVerificationError.ArgumentsMismatch()
+                    }
+                    
                 }
             }
         } else {
@@ -103,25 +151,23 @@ public class MockCallHandler {
     }
     
     func reject(method: () -> ()) throws {
-        var success = false
-        
         do {
-            try verify(method: method)
-        } catch MockVerificationError.MethodNotMocked {
-            throw MockVerificationError.MethodNotMocked
+            try verify(expectedCallCount: 0, method: method)
         } catch {
-            success = true
-        }
-        
-        if success == false {
             throw MockVerificationError.MethodWasCalled
         }
     }
     
-    func stubMethod(method: () -> (), andReturnValue returnValue: Any?) throws {
-        let methodName = try captureMethodName(method)
+    func stub(method: () -> (), andReturnValue returnValue: Any?, checkArguments: Bool = true) throws {
+        stubRecorderMode = .Recording(Stub(value: returnValue), checkArguments)
         
-        stubbedReturns[methodName] = returnValue == nil ? ExpectedNil() : returnValue
+        let methodName = try captureMethodCall(method)
+        
+        if let recordedStubs = stubs[methodName] {
+            if recordedStubs.checkArguments == false && checkArguments == true {
+                throw MockVerificationError.MethodHasBeenStubbedForAllArguments
+            }
+        }
     }
 }
 
@@ -131,15 +177,17 @@ protocol CallHistory {
 }
 
 class CallHistoryRecorder<A: Equatable> : CallHistory {
-    var verificationCall: A?
     var history: [A]
+    var verificationCall: A?
     
     var count: Int {
         return history.count
     }
     
-    init(firstArgs: A) {
-        history = [firstArgs]
+    init(firstArgs: A, verificationCall: Bool) {
+        history = []
+        
+        record(firstArgs, verificationCall: verificationCall)
     }
     
     func record(args: A, verificationCall: Bool) {
@@ -163,10 +211,58 @@ class CallHistoryRecorder<A: Equatable> : CallHistory {
     }
 }
 
+struct Stub {
+    let value: Any?
+}
+
+protocol StubRegistry {
+    var checkArguments: Bool { get }
+}
+
+class StubRegistryRecorder<A: Equatable>: StubRegistry {
+    var stubs: [(A, Stub)]
+    let checkArguments: Bool
+    
+    init(args: A, stubbedValue: Stub, checkArguments: Bool) {
+        stubs = []
+        self.checkArguments = checkArguments
+        
+        stub(args: args, stubbedValue: stubbedValue)
+    }
+    
+    func stub(args args: A, stubbedValue: Stub) {
+        if checkArguments == false && stubs.count >= 1 {
+            return
+        }
+        
+        removePreviousStubForArgsIfAny(args)
+        
+        stubs.append((args, stubbedValue))
+    }
+    
+    func removePreviousStubForArgsIfAny(args: A) {
+        if getStubbedValue(args) != nil {
+            let indexOfPreviousStub = stubs.indexOf({ (argsI, stubI) in
+                return argsI == args
+            })
+            
+            if let indexOfPreviousStub = indexOfPreviousStub {
+                stubs.removeAtIndex(indexOfPreviousStub)
+            }
+        }
+    }
+    
+    func getStubbedValue(args: A) -> Stub? {
+        let x = stubs.filter({ checkArguments == false || $0.0 == args }).map({ $0.1 }).first
+        return x ?? nil
+    }
+}
+
 enum MockVerificationError: ErrorType {
     case MethodNotCalled
     case MethodWasCalled
     case MethodCallCountMismatch(Int, Int)
     case ArgumentsMismatch()
     case MethodNotMocked
+    case MethodHasBeenStubbedForAllArguments
 }

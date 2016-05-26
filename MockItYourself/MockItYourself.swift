@@ -22,8 +22,8 @@ extension MockItYourself {
         try callHandler.reject(method)
     }
     
-    func stubMethod(method: () -> (), andReturnValue returnValue: Any?) throws {
-        try callHandler.stubMethod(method, andReturnValue: returnValue)
+    func stub(method: () -> (), andReturnValue returnValue: Any?, checkArguments: Bool = true) throws {
+        try callHandler.stub(method, andReturnValue: returnValue, checkArguments: checkArguments)
     }
 }
 
@@ -43,9 +43,9 @@ public func reject(mock: MockItYourself, message: String = "", file: StaticStrin
     }
 }
 
-public func stub(mock: MockItYourself, andReturnValue returnValue: Any?, file: StaticString = #file, line: UInt = #line, method: () -> ()) {
+public func stub(mock: MockItYourself, andReturnValue returnValue: Any?, checkArguments: Bool = true, file: StaticString = #file, line: UInt = #line, method: () -> ()) {
      do {
-        try mock.stubMethod(method, andReturnValue: returnValue)
+        try mock.stub(method, andReturnValue: returnValue, checkArguments: checkArguments)
      } catch let error {
         XCTFail("\(error)", file:  file, line: line)
     }
