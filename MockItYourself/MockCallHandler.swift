@@ -6,13 +6,18 @@
 //  Copyright © 2016 Plain Vanilla Games. All rights reserved.
 //
 
+enum StubRecorderMode {
+    case Recording(Stub, Bool)
+    case Off
+}
+
 public class MockCallHandler {
     private var recordedCalls = [String: CallHistory]()
 
     private var stubs = [String: StubRegistry]()
     
-    private var shouldCheckArgumentsForStub: Bool?
-    private var isStubbingMethodCallValue: Stub? = nil
+    private var stubRecorderMode: StubRecorderMode = .Off
+    
     private var isCapturingMethodCall = false
 
     private var lastMethodCallName = ""
@@ -48,13 +53,15 @@ public class MockCallHandler {
     }
     
     public func registerCall<A: Equatable, R: Any>(args args: A, defaultReturnValue: R?, methodName: String = #function) -> R? {
-        recordCall(methodName: methodName, args: args)
+        let methodName = recordCall(methodName: methodName, args: args)
         
-        if let stubbedValue = isStubbingMethodCallValue, checkArguments = shouldCheckArgumentsForStub {
+        switch stubRecorderMode {
+        case .Recording(let stubbedValue, let checkArguments):
             recordStub(methodName: methodName, args: args, stubbedValue: stubbedValue, checkArguments: checkArguments)
             
-            shouldCheckArgumentsForStub = nil
-            isStubbingMethodCallValue = nil
+            stubRecorderMode = .Off
+        default:
+            break
         }
         
         if let recordedStubs = stubs[methodName] as? StubRegistryRecorder<A>, stub = recordedStubs.getStubbedValue(args) {
@@ -69,13 +76,15 @@ public class MockCallHandler {
     }
 
     public func registerCall<A: Equatable, R: Any>(args args: A, defaultReturnValue: R, methodName: String = #function) -> R {
-        recordCall(methodName: methodName, args: args)
+        let methodName = recordCall(methodName: methodName, args: args)
         
-        if let stubbedValue = isStubbingMethodCallValue, checkArguments = shouldCheckArgumentsForStub {
+        switch stubRecorderMode {
+        case .Recording(let stubbedValue, let checkArguments):
             recordStub(methodName: methodName, args: args, stubbedValue: stubbedValue, checkArguments: checkArguments)
             
-            shouldCheckArgumentsForStub = nil
-            isStubbingMethodCallValue = nil
+            stubRecorderMode = .Off
+        default:
+            break
         }
         
         if let recordedStubs = stubs[methodName] as? StubRegistryRecorder<A>, stub = recordedStubs.getStubbedValue(args) {
@@ -91,7 +100,7 @@ public class MockCallHandler {
         }
     }
     
-    func recordCall<A: Equatable>(methodName methodName: String, args: A) {
+    func recordCall<A: Equatable>(methodName methodName: String, args: A) -> String {
         lastMethodCallName = methodName
         
         if let callHistory = recordedCalls[methodName] as? CallHistoryRecorder<A> {
@@ -102,6 +111,8 @@ public class MockCallHandler {
         }
         
         isCapturingMethodCall = false
+        
+        return methodName
     }
     
     func recordStub<A: Equatable>(methodName methodName: String, args: A, stubbedValue: Stub, checkArguments: Bool) {
@@ -148,8 +159,7 @@ public class MockCallHandler {
     }
     
     func stub(method: () -> (), andReturnValue returnValue: Any?, checkArguments: Bool = true) throws {
-        shouldCheckArgumentsForStub = checkArguments
-        isStubbingMethodCallValue = Stub(value: returnValue)
+        stubRecorderMode = .Recording(Stub(value: returnValue), checkArguments)
         
         let methodName = try captureMethodCall(method)
         
