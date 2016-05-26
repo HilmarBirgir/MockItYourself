@@ -58,12 +58,7 @@ public class MockCallHandler {
         }
         
         if let recordedStubs = stubs[methodName] as? StubRegistryRecorder<A>, stub = recordedStubs.getStubbedValue(args) {
-            switch stub {
-            case .Value(let stubbedValue):
-                return stubbedValue as? R
-            case .Nil:
-                return nil
-            }
+            return stub.value as? R
         } else {
             return defaultReturnValue
         }
@@ -84,11 +79,10 @@ public class MockCallHandler {
         }
         
         if let recordedStubs = stubs[methodName] as? StubRegistryRecorder<A>, stub = recordedStubs.getStubbedValue(args) {
-            switch stub {
-            case .Value(let stubbedValue):
+            if let stubbedValue = stub.value {
                 return stubbedValue as! R
-            case .Nil:
-                // This case actually doesn't make sense. 
+            } else {
+                // This case actually doesn't make sense.
                 // It might make sense to throw an exception here
                 return defaultReturnValue
             }
@@ -155,7 +149,7 @@ public class MockCallHandler {
     
     func stub(method: () -> (), andReturnValue returnValue: Any?, checkArguments: Bool = true) throws {
         shouldCheckArgumentsForStub = checkArguments
-        isStubbingMethodCallValue = Stub.wrap(returnValue)
+        isStubbingMethodCallValue = Stub(value: returnValue)
         
         let methodName = try captureMethodCall(method)
         
@@ -207,19 +201,8 @@ class CallHistoryRecorder<A: Equatable> : CallHistory {
     }
 }
 
-// We need this type to be able to differentiate between a method
-// that hasn't been stubbed and a method that has been stubbed to return nil
-enum Stub {
-    case Value(Any)
-    case Nil
-    
-    static func wrap(value: Any?) -> Stub {
-        if let value = value {
-            return Stub.Value(value)
-        } else {
-            return Stub.Nil
-        }
-    }
+struct Stub {
+    let value: Any?
 }
 
 protocol StubRegistry {
