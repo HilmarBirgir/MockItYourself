@@ -6,6 +6,8 @@
 //  Copyright © 2016 Plain Vanilla Games. All rights reserved.
 //
 
+// swiftlint:disable file_length
+
 import Foundation
 
 // This type only exists to complete the generics for the Arg type
@@ -63,6 +65,14 @@ public func arg(anyObject: AnyObject) -> Arg<AnyObject, AnyObjectArgument> {
     return Arg.AnyObject(anyObject)
 }
 
+public func arg(anyObject: AnyObject?) -> Arg<AnyObject, AnyObjectArgument> {
+    if let anyObject = anyObject {
+        return Arg.AnyObject(anyObject)
+    } else {
+        return Arg.Nil
+    }
+}
+
 public func arg(anyObjectList: [AnyObject]) -> Arg<AnyObject, AnyObjectArgument> {
     return Arg.AnyObject(anyObjectList as AnyObject)
 }
@@ -79,6 +89,14 @@ public func arg<A: Equatable>(equatable: A) -> Arg<AnyObject, A> {
     return Arg.Equatable(equatable)
 }
 
+public func arg<A: Equatable>(equatable: A?) -> Arg<AnyObject, A> {
+    if let equatable = equatable {
+        return Arg.Equatable(equatable)
+    } else {
+        return Arg.Nil
+    }
+}
+
 public func arg<A: Equatable>(list: [A]) -> Arg<AnyObject, A> {
     return Arg.List(list)
 }
@@ -90,14 +108,6 @@ public func arg<A, B>(dict: [A: B]) -> Arg<AnyObject, String> {
 
 public func arg<A, B>(dict: [A: B]?) -> Arg<AnyObject, String> {
     return arg(dict ?? [:])
-}
-
-public func arg<A: Equatable>(equatable: A?) -> Arg<AnyObject, A> {
-    if let equatable = equatable {
-        return Arg.Equatable(equatable)
-    } else {
-        return Arg.Nil
-    }
 }
 
 // MARK: Args0

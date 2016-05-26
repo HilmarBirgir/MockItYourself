@@ -93,4 +93,8 @@ class MockExampleClass: ExampleProtocol, MockItYourself {
     func methodWithArgs2(arg1: AnyObject, arg2: Selector) -> String {
         return callHandler.registerCall(args: Args2(arg(arg1), arg(arg2)), defaultReturnValue: MockExampleClass.defaultReturnValue)
     }
+    
+    func methodWithArgs3(arg1: AnyObject?, arg2: Selector, arg3: Int) -> String {
+        return callHandler.registerCall(args: Args3(arg(arg1), arg(arg2), arg(arg3)), defaultReturnValue: MockExampleClass.defaultReturnValue)
+    }
 }
