@@ -1,5 +1,5 @@
 //
-//  CallHandler.swift
+//  MockCallHandler.Swift
 //  QuizUp
 //
 //  Created by Alex Verein on 03/03/16.
@@ -48,10 +48,12 @@ public class MockCallHandler {
         recordCall(methodName: methodName, args: args)
     }
     
+    @warn_unused_result(message="Did you mean to call `registerCall` that doesn't return a value?")
     public func registerCall<R: Any>(defaultReturnValue defaultReturnValue: R?, methodName: String = #function) -> R? {
         return registerCall(args: Args0(), defaultReturnValue: defaultReturnValue, methodName: methodName)
     }
     
+    @warn_unused_result(message="Did you mean to call `registerCall` that doesn't return a value?")
     public func registerCall<A: Equatable, R: Any>(args args: A, defaultReturnValue: R?, methodName: String = #function) -> R? {
         let methodName = recordCall(methodName: methodName, args: args)
         
@@ -71,10 +73,12 @@ public class MockCallHandler {
         }
     }
 
+    @warn_unused_result(message="Did you mean to call `registerCall` that doesn't return a value?")
     public func registerCall<R: Any>(defaultReturnValue defaultReturnValue: R, methodName: String = #function) -> R {
         return registerCall(args: Args0(), defaultReturnValue: defaultReturnValue, methodName: methodName)
     }
-
+    
+    @warn_unused_result(message="Did you mean to call `registerCall` that doesn't return a value?")
     public func registerCall<A: Equatable, R: Any>(args args: A, defaultReturnValue: R, methodName: String = #function) -> R {
         let methodName = recordCall(methodName: methodName, args: args)
         
