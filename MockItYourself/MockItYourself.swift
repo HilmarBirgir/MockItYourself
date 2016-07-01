@@ -29,10 +29,18 @@ public func reject(mock: MockItYourself, message: String = "", file: StaticStrin
     }
 }
 
-public func stub(mock: MockItYourself, andReturnValue returnValue: Any?, checkArguments: Bool = true, file: StaticString = #file, line: UInt = #line, method: () -> ()) {
+public func stub<R>(mock: MockItYourself, andReturnValue returnValue: R, checkArguments: Bool = true, file: StaticString = #file, line: UInt = #line, method: () -> R) {
      do {
-        try mock.callHandler.stub(method, andReturnValue: returnValue, checkArguments: checkArguments)
+        try mock.callHandler.stub({ method() }, andReturnValue: returnValue, checkArguments: checkArguments)
      } catch let error {
+        XCTFail("\(error)", file:  file, line: line)
+    }
+}
+
+public func stub<R>(mock: MockItYourself, andReturnValue returnValue: R?, checkArguments: Bool = true, file: StaticString = #file, line: UInt = #line, method: () -> R?) {
+    do {
+        try mock.callHandler.stub({ method() }, andReturnValue: returnValue, checkArguments: checkArguments)
+    } catch let error {
         XCTFail("\(error)", file:  file, line: line)
     }
 }
