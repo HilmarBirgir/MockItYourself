@@ -22,7 +22,7 @@ class VerifyTests: XCTestCase {
         var success = false
         
         do {
-            try mockExample.verify() { self.mockExample.methodThatIsNotMocked() }
+            try mockExample.callHandler.verify() { self.mockExample.methodThatIsNotMocked() }
         } catch {
             success = true
         }
@@ -49,7 +49,7 @@ class VerifyTests: XCTestCase {
         mockExample.methodWithArgs0()
         
         do {
-            try mockExample.verify(expectedCallCount: 2) { self.mockExample.methodWithArgs0() }
+            try mockExample.callHandler.verify(expectedCallCount: 2) { self.mockExample.methodWithArgs0() }
         } catch {
             success = true
         }
@@ -76,7 +76,7 @@ class VerifyTests: XCTestCase {
         var success = false
         
         do {
-            try mockExample.verify() { self.mockExample.methodWithArgs2(any(), arg2: nil) }
+            try mockExample.callHandler.verify() { self.mockExample.methodWithArgs2(any(), arg2: nil) }
         } catch {
             success = true
         }
@@ -111,7 +111,7 @@ class VerifyTests: XCTestCase {
         
         var success = false
         do {
-            try mockExample.verify(checkArguments: true, expectedCallCount: 2) { self.mockExample.methodWithArgs2(arg1, arg2: arg2) }
+            try mockExample.callHandler.verify(checkArguments: true, expectedCallCount: 2) { self.mockExample.methodWithArgs2(arg1, arg2: arg2) }
         } catch {
             success = true
         }
@@ -128,7 +128,7 @@ class VerifyTests: XCTestCase {
         
         var success = false
         do {
-            try mockExample.verify(checkArguments: true, expectedCallCount: 2) { self.mockExample.methodWithArgs2(arg1, arg2: arg2) }
+            try mockExample.callHandler.verify(checkArguments: true, expectedCallCount: 2) { self.mockExample.methodWithArgs2(arg1, arg2: arg2) }
         } catch {
             success = true
         }
@@ -151,7 +151,7 @@ class VerifyTests: XCTestCase {
         var success = false
         
         do {
-            try mockExample.verify(checkArguments: true) { self.mockExample.methodWithArgs2(arg1, arg2: arg2) }
+            try mockExample.callHandler.verify(checkArguments: true) { self.mockExample.methodWithArgs2(arg1, arg2: arg2) }
         } catch {
             success = true
         }
@@ -168,7 +168,7 @@ class VerifyTests: XCTestCase {
         var success = false
         
         do {
-            try mockExample.verify(checkArguments: true) { self.mockExample.methodWithArgs2(arg1, arg2: arg2) }
+            try mockExample.callHandler.verify(checkArguments: true) { self.mockExample.methodWithArgs2(arg1, arg2: arg2) }
         } catch {
             success = true
         }
