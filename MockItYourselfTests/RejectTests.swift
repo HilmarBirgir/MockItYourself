@@ -22,7 +22,7 @@ class RejectTests: XCTestCase {
         var success = false
         
         do {
-            try mockExample.reject() { self.mockExample.methodThatIsNotMocked() }
+            try mockExample.callHandler.reject() { self.mockExample.methodThatIsNotMocked() }
         } catch {
             success = true
         }
@@ -40,7 +40,7 @@ class RejectTests: XCTestCase {
         var success = false
         
         do {
-            try mockExample.reject() { self.mockExample.methodWithArgs1("") }
+            try mockExample.callHandler.reject() { self.mockExample.methodWithArgs1("") }
         } catch {
             success = true
         }

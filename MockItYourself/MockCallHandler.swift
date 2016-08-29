@@ -127,7 +127,7 @@ public class MockCallHandler {
         }
     }
 
-    func verify(expectedCallCount expectedCallCount: Int? = nil, checkArguments: Bool = false, method: () -> ()) throws {
+    func verify(expectedCallCount expectedCallCount: Int? = nil, checkArguments: Bool = true, method: () -> ()) throws {
         let methodName = try captureMethodCall(method)
         
         if let callHistory = recordedCalls[methodName] {
