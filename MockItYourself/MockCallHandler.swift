@@ -258,7 +258,7 @@ class StubRegistryRecorder<A: Equatable>: StubRegistry {
     }
 }
 
-enum MockVerificationError: ErrorType {
+enum MockVerificationError: Error {
     case MethodNotCalled
     case MethodWasCalled
     case MethodCallCountMismatch(Int, Int)
