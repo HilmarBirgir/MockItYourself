@@ -13,7 +13,7 @@ public protocol MockItYourself {
     var callHandler: MockCallHandler { get }
 }
 
-public func verify(mock: MockItYourself, message: String = "", file: StaticString = #file, line: UInt = #line, expectedCallCount: Int? = nil, checkArguments: Bool = true, verify: () -> ()) {
+public func verify(_ mock: MockItYourself, message: String = "", file: StaticString = #file, line: UInt = #line, expectedCallCount: Int? = nil, checkArguments: Bool = true, verify: () -> ()) {
     do {
         try mock.callHandler.verify(expectedCallCount: expectedCallCount, checkArguments: checkArguments, method: verify)
     } catch let error {
@@ -21,7 +21,7 @@ public func verify(mock: MockItYourself, message: String = "", file: StaticStrin
     }
 }
 
-public func reject(mock: MockItYourself, message: String = "", file: StaticString = #file, line: UInt = #line, reject: () -> ()) {
+public func reject(_ mock: MockItYourself, message: String = "", file: StaticString = #file, line: UInt = #line, reject: () -> ()) {
     do {
         try mock.callHandler.reject(reject)
     } catch let error {
@@ -29,7 +29,7 @@ public func reject(mock: MockItYourself, message: String = "", file: StaticStrin
     }
 }
 
-public func stub<R>(mock: MockItYourself, andReturnValue returnValue: R, checkArguments: Bool = true, file: StaticString = #file, line: UInt = #line, method: () -> R) {
+public func stub<R>(_ mock: MockItYourself, andReturnValue returnValue: R, checkArguments: Bool = true, file: StaticString = #file, line: UInt = #line, method: () -> R) {
      do {
         try mock.callHandler.stub({ method() }, andReturnValue: returnValue, checkArguments: checkArguments)
      } catch let error {
@@ -37,7 +37,7 @@ public func stub<R>(mock: MockItYourself, andReturnValue returnValue: R, checkAr
     }
 }
 
-public func stub<R>(mock: MockItYourself, andReturnValue returnValue: R?, checkArguments: Bool = true, file: StaticString = #file, line: UInt = #line, method: () -> R?) {
+public func stub<R>(_ mock: MockItYourself, andReturnValue returnValue: R?, checkArguments: Bool = true, file: StaticString = #file, line: UInt = #line, method: () -> R?) {
     do {
         try mock.callHandler.stub({ method() }, andReturnValue: returnValue, checkArguments: checkArguments)
     } catch let error {
