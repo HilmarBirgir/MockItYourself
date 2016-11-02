@@ -24,17 +24,17 @@ protocol ExampleProtocol {
     
     func methodThatIsNotMocked()
     
-    func methodWithOptionalArgument(arg1: String?)
+    func methodWithOptionalArgument(_ arg1: String?)
     
     func methodWithArgs0()
     func methodWithArgs0ReturnsOptional() -> String?
     func methodWithArgs0Returns() -> String
     
-    func methodWithArgs1(arg1: String)
-    func methodWithArgs1ReturnsOptional(arg1: String) -> String?
-    func methodWithArgs1Returns(arg1: String) -> String
+    func methodWithArgs1(_ arg1: String)
+    func methodWithArgs1ReturnsOptional(_ arg1: String) -> String?
+    func methodWithArgs1Returns(_ arg1: String) -> String
     
-    func methodWithArgs2(arg1: AnyObject, arg2: Selector) -> String
+    func methodWithArgs2(_ arg1: AnyObject, arg2: Selector) -> String
 }
 
 class MockExampleClass: ExampleProtocol, MockItYourself {
@@ -58,10 +58,10 @@ class MockExampleClass: ExampleProtocol, MockItYourself {
         //Not mocked method
     }
     
-    func methodWithOptionalArgument(arg1: String?) {
+    func methodWithOptionalArgument(_ arg1: String?) {
         callHandler.registerCall(args: Args1(arg(arg1)))
     }
-    
+
     func methodWithArgs0() {
         callHandler.registerCall()
     }
@@ -74,11 +74,11 @@ class MockExampleClass: ExampleProtocol, MockItYourself {
         return callHandler.registerCall(defaultReturnValue: MockExampleClass.defaultReturnValue)
     }
     
-    func methodWithArgs1(arg1: String) {
+    func methodWithArgs1(_ arg1: String) {
         callHandler.registerCall(args: Args1(arg(arg1)))
     }
     
-    func methodWithArgs1ReturnsOptional(arg1: String) -> String? {
+    func methodWithArgs1ReturnsOptional(_ arg1: String) -> String? {
         return callHandler.registerCall(args: Args1(arg(arg1)), defaultReturnValue: nil)
     }
     
@@ -86,11 +86,11 @@ class MockExampleClass: ExampleProtocol, MockItYourself {
         return callHandler.registerCall(args: Args1(arg(arg1)), defaultReturnValue: ReturnValueClass(value: 1))
     }
     
-    func methodWithArgs1Returns(arg1: String) -> String {
+    func methodWithArgs1Returns(_ arg1: String) -> String {
         return callHandler.registerCall(args: Args1(arg(arg1)), defaultReturnValue: MockExampleClass.defaultReturnValue)
     }
     
-    func methodWithArgs2(arg1: AnyObject, arg2: Selector) -> String {
+    func methodWithArgs2(_ arg1: AnyObject, arg2: Selector) -> String {
         return callHandler.registerCall(args: Args2(arg(arg1), arg(arg2)), defaultReturnValue: MockExampleClass.defaultReturnValue)
     }
     
