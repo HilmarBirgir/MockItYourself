@@ -242,12 +242,12 @@ class StubRegistryRecorder<A: Equatable>: StubRegistry {
     
     func removePreviousStubForArgsIfAny(args: A) {
         if getStubbedValue(args) != nil {
-            let indexOfPreviousStub = stubs.indexOf({ (argsI, stubI) in
+            let indexOfPreviousStub = stubs.index(where: { (argsI, stubI) in
                 return argsI == args
             })
             
             if let indexOfPreviousStub = indexOfPreviousStub {
-                stubs.removeAtIndex(indexOfPreviousStub)
+                stubs.remove(at: indexOfPreviousStub)
             }
         }
     }
