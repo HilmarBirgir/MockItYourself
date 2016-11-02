@@ -64,7 +64,7 @@ public class MockCallHandler {
             break
         }
         
-        if let recordedStubs = stubs[methodName] as? StubRegistryRecorder<A>, stub = recordedStubs.getStubbedValue(args: args) {
+        if let recordedStubs = stubs[methodName] as? StubRegistryRecorder<A>, let stub = recordedStubs.getStubbedValue(args: args) {
             return stub.value as? R
         } else {
             return defaultReturnValue
@@ -87,7 +87,7 @@ public class MockCallHandler {
             break
         }
         
-        if let recordedStubs = stubs[methodName] as? StubRegistryRecorder<A>, stub = recordedStubs.getStubbedValue(args) {
+        if let recordedStubs = stubs[methodName] as? StubRegistryRecorder<A>, let stub = recordedStubs.getStubbedValue(args: args) {
             if let stubbedValue = stub.value {
                 return stubbedValue as! R
             } else {

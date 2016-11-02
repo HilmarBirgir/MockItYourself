@@ -107,7 +107,7 @@ public func arg<A, B>(dict: [A: B]) -> Arg<AnyObject, String> {
 }
 
 public func arg<A, B>(dict: [A: B]?) -> Arg<AnyObject, String> {
-    return arg(dict ?? [:])
+    return arg(dict: dict ?? [:])
 }
 
 // MARK: Args0
