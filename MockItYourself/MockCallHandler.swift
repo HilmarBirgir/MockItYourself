@@ -45,7 +45,7 @@ public class MockCallHandler {
     }
     
     public func registerCall<A: Equatable>(args: A, methodName: String = #function) {
-        recordCall(methodName: methodName, args: args)
+        _ = recordCall(methodName: methodName, args: args)
     }
     
     public func registerCall<R: Any>(defaultReturnValue: R?, methodName: String = #function) -> R? {
@@ -128,7 +128,7 @@ public class MockCallHandler {
         
         if let callHistory = recordedCalls[methodName] {
             if let expectedCallCount = expectedCallCount {
-                let actualCallCount = callHistory.count ?? 0
+                let actualCallCount = callHistory.count 
                 if expectedCallCount != actualCallCount {
                     throw MockVerificationError.MethodCallCountMismatch(actualCallCount, expectedCallCount)
                 }
