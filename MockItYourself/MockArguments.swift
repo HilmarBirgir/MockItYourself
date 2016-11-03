@@ -21,21 +21,21 @@ public func == (lhs: AnyObjectArgument, rhs: AnyObjectArgument) -> Bool {
 // Mark: Arg
 
 public enum Arg<A: AnyObject, B: Equatable> : Equatable {
-    case AnyObject(A)
-    case Equatable(B)
-    case List([B])
-    case Nil
+    case anyObject(A)
+    case equatable(B)
+    case list([B])
+    case `nil`
 }
 
 public func ==<A: AnyObject, B: Equatable>(lhs: Arg<A, B>, rhs: Arg<A, B>) -> Bool {
     switch (lhs, rhs) {
-    case (.AnyObject(let x), .AnyObject(let y)):
+    case (.anyObject(let x), .anyObject(let y)):
         return x == y
-    case (.Equatable(let x), .Equatable(let y)):
+    case (.equatable(let x), .equatable(let y)):
         return x == y
-    case (.List(let x), .List(let y)):
+    case (.list(let x), .list(let y)):
         return x == y
-    case (.Nil, .Nil):
+    case (.nil, .nil):
         return true
     default:
         return false
@@ -62,48 +62,48 @@ func == (lhs: AnyObject, rhs: AnyObject) -> Bool {
 }
 
 public func arg(anyObject: AnyObject) -> Arg<AnyObject, AnyObjectArgument> {
-    return Arg.AnyObject(anyObject)
+    return Arg.anyObject(anyObject)
 }
 
 public func arg(anyObject: AnyObject?) -> Arg<AnyObject, AnyObjectArgument> {
     if let anyObject = anyObject {
-        return Arg.AnyObject(anyObject)
+        return Arg.anyObject(anyObject)
     } else {
-        return Arg.Nil
+        return Arg.nil
     }
 }
 
 public func arg(anyObjectList: [AnyObject]) -> Arg<AnyObject, AnyObjectArgument> {
-    return Arg.AnyObject(anyObjectList as AnyObject)
+    return Arg.anyObject(anyObjectList as AnyObject)
 }
 
 public func arg(anyObjectList: [AnyObject]?) -> Arg<AnyObject, AnyObjectArgument> {
-    return Arg.AnyObject((anyObjectList ?? []) as AnyObject)
+    return Arg.anyObject((anyObjectList ?? []) as AnyObject)
 }
 
 public func arg(anyClass: AnyClass) -> Arg<AnyObject, AnyObjectArgument> {
-    return Arg.AnyObject(anyClass)
+    return Arg.anyObject(anyClass)
 }
 
 public func arg<A: Equatable>(equatable: A) -> Arg<AnyObject, A> {
-    return Arg.Equatable(equatable)
+    return Arg.equatable(equatable)
 }
 
 public func arg<A: Equatable>(equatable: A?) -> Arg<AnyObject, A> {
     if let equatable = equatable {
-        return Arg.Equatable(equatable)
+        return Arg.equatable(equatable)
     } else {
-        return Arg.Nil
+        return Arg.nil
     }
 }
 
 public func arg<A: Equatable>(list: [A]) -> Arg<AnyObject, A> {
-    return Arg.List(list)
+    return Arg.list(list)
 }
 
 public func arg<A, B>(dict: [A: B]) -> Arg<AnyObject, String> {
     let flattened = dict.map({"\($0):\($1)"})
-    return Arg.List(flattened)
+    return Arg.list(flattened)
 }
 
 public func arg<A, B>(dict: [A: B]?) -> Arg<AnyObject, String> {
