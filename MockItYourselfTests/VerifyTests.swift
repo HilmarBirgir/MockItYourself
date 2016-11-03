@@ -101,7 +101,7 @@ class VerifyTests: XCTestCase {
         mockExample.methodWithArgs2(arg1, arg2: arg2)
         mockExample.methodWithArgs2(arg1, arg2: arg2)
         
-        verify(mockExample, checkArguments: true, expectedCallCount: 2) { self.mockExample.methodWithArgs2(arg1, arg2: arg2) }
+        verify(mockExample, expectedCallCount: 2, checkArguments: true) { self.mockExample.methodWithArgs2(arg1, arg2: arg2) }
     }
     
     func test_asserts_if_checking_if_correct_arguments_with_expected_number_of_calls_if_call_number_mismatch() {
@@ -112,7 +112,7 @@ class VerifyTests: XCTestCase {
         
         var success = false
         do {
-            try mockExample.callHandler.verify(checkArguments: true, expectedCallCount: 2) { self.mockExample.methodWithArgs2(arg1, arg2: arg2) }
+            try mockExample.callHandler.verify(expectedCallCount: 2, checkArguments: true) { self.mockExample.methodWithArgs2(arg1, arg2: arg2) }
         } catch {
             success = true
         }
@@ -129,7 +129,7 @@ class VerifyTests: XCTestCase {
         
         var success = false
         do {
-            try mockExample.callHandler.verify(checkArguments: true, expectedCallCount: 2) { self.mockExample.methodWithArgs2(arg1, arg2: arg2) }
+            try mockExample.callHandler.verify(expectedCallCount: 2, checkArguments: true) { self.mockExample.methodWithArgs2(arg1, arg2: arg2) }
         } catch {
             success = true
         }
