@@ -31,7 +31,7 @@ public func reject(_ mock: MockItYourself, message: String = "", file: StaticStr
 
 public func stub<R>(_ mock: MockItYourself, andReturnValue returnValue: R, checkArguments: Bool = true, file: StaticString = #file, line: UInt = #line, method: () -> R) {
      do {
-        try mock.callHandler.stub({ method() }, andReturnValue: returnValue, checkArguments: checkArguments)
+        try mock.callHandler.stub({ _ = method() }, andReturnValue: returnValue, checkArguments: checkArguments)
      } catch let error {
         XCTFail("\(error)", file:  file, line: line)
     }
@@ -39,7 +39,7 @@ public func stub<R>(_ mock: MockItYourself, andReturnValue returnValue: R, check
 
 public func stub<R>(_ mock: MockItYourself, andReturnValue returnValue: R?, checkArguments: Bool = true, file: StaticString = #file, line: UInt = #line, method: () -> R?) {
     do {
-        try mock.callHandler.stub({ method() }, andReturnValue: returnValue, checkArguments: checkArguments)
+        try mock.callHandler.stub({ _ = method() }, andReturnValue: returnValue, checkArguments: checkArguments)
     } catch let error {
         XCTFail("\(error)", file:  file, line: line)
     }
