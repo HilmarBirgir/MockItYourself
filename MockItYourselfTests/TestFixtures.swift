@@ -34,7 +34,7 @@ protocol ExampleProtocol {
     func methodWithArgs1ReturnsOptional(_ arg1: String) -> String?
     func methodWithArgs1Returns(_ arg1: String) -> String
 
-    func methodWithArgs2(_ arg1: String, arg2: Selector?) -> String
+    func methodWithArgs2(_ arg1: String, arg2: Selector?)
 }
 
 class MockExampleClass: ExampleProtocol, MockItYourself {
@@ -90,7 +90,7 @@ class MockExampleClass: ExampleProtocol, MockItYourself {
         return callHandler.registerCall(args: Args1(arg(arg1)), defaultReturnValue: MockExampleClass.defaultReturnValue)
     }
     
-    func methodWithArgs2(_ arg1: String, arg2: Selector?) -> String {
+    func methodWithArgs2(_ arg1: String, arg2: Selector?) {
         return callHandler.registerCall(args: Args2(arg(arg1), arg(arg2)), defaultReturnValue: MockExampleClass.defaultReturnValue)
     }
     

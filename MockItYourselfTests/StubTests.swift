@@ -65,7 +65,7 @@ class StubTests: XCTestCase {
         
         var success = false
         do {
-            try mockExample.callHandler.stub({ self.mockExample.methodWithArgs1Returns("B") }, andReturnValue: "Return B", checkArguments: true)
+            try mockExample.callHandler.stub({ _ = self.mockExample.methodWithArgs1Returns("B") }, andReturnValue: "Return B", checkArguments: true)
         } catch MockVerificationError.MethodHasBeenStubbedForAllArguments {
             success = true
         } catch {
