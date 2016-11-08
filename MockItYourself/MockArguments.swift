@@ -61,11 +61,11 @@ func == (lhs: AnyObject, rhs: AnyObject) -> Bool {
     }
 }
 
-public func arg(anyObject: AnyObject) -> Arg<AnyObject, AnyObjectArgument> {
+public func arg(_ anyObject: AnyObject) -> Arg<AnyObject, AnyObjectArgument> {
     return Arg.anyObject(anyObject)
 }
 
-public func arg(anyObject: AnyObject?) -> Arg<AnyObject, AnyObjectArgument> {
+public func arg(_ anyObject: AnyObject?) -> Arg<AnyObject, AnyObjectArgument> {
     if let anyObject = anyObject {
         return Arg.anyObject(anyObject)
     } else {
@@ -73,7 +73,7 @@ public func arg(anyObject: AnyObject?) -> Arg<AnyObject, AnyObjectArgument> {
     }
 }
 
-public func arg(anyObjectList: [AnyObject]) -> Arg<AnyObject, AnyObjectArgument> {
+public func arg(_ anyObjectList: [AnyObject]) -> Arg<AnyObject, AnyObjectArgument> {
     return Arg.anyObject(anyObjectList as AnyObject)
 }
 
@@ -85,11 +85,11 @@ public func arg(anyClass: AnyClass) -> Arg<AnyObject, AnyObjectArgument> {
     return Arg.anyObject(anyClass)
 }
 
-public func arg<A: Equatable>(equatable: A) -> Arg<AnyObject, A> {
+public func arg<A: Equatable>(_ equatable: A) -> Arg<AnyObject, A> {
     return Arg.equatable(equatable)
 }
 
-public func arg<A: Equatable>(equatable: A?) -> Arg<AnyObject, A> {
+public func arg<A: Equatable>(_ equatable: A?) -> Arg<AnyObject, A> {
     if let equatable = equatable {
         return Arg.equatable(equatable)
     } else {
@@ -97,17 +97,17 @@ public func arg<A: Equatable>(equatable: A?) -> Arg<AnyObject, A> {
     }
 }
 
-public func arg<A: Equatable>(list: [A]) -> Arg<AnyObject, A> {
+public func arg<A: Equatable>(_ list: [A]) -> Arg<AnyObject, A> {
     return Arg.list(list)
 }
 
-public func arg<A, B>(dict: [A: B]) -> Arg<AnyObject, String> {
+public func arg<A, B>(_ dict: [A: B]) -> Arg<AnyObject, String> {
     let flattened = dict.map({"\($0):\($1)"})
     return Arg.list(flattened)
 }
 
-public func arg<A, B>(dict: [A: B]?) -> Arg<AnyObject, String> {
-    return arg(dict: dict ?? [:])
+public func arg<A, B>(_ dict: [A: B]?) -> Arg<AnyObject, String> {
+    return arg(dict ?? [:])
 }
 
 // MARK: Args0
