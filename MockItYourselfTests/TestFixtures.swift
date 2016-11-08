@@ -63,7 +63,7 @@ class MockExampleClass: ExampleProtocol, MockItYourself {
     }
 
     func methodWithArgs0() {
-        callHandler.registerCall()
+        callHandler.registerMethodCall()
     }
     
     func methodWithArgs0ReturnsOptional() -> String? {

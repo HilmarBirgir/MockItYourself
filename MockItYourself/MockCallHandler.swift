@@ -40,7 +40,7 @@ public class MockCallHandler {
         return methodCallName
     }
 
-    public func registerCall(methodName: String = #function) {
+    public func registerMethodCall(methodName: String = #function) {
         registerCall(args: Args0(), methodName: methodName)
     }
     
