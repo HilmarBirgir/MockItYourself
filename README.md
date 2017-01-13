@@ -100,6 +100,10 @@ class Dependency {
         print("Do something really slow and expensive with arguments")
         return 40.0
     }
+
+    func otherSlowMethod() {
+        print("Still doing slow things..")
+    }
 }
 
 class MockDependency: Dependency, MockItYourself {
@@ -107,6 +111,10 @@ class MockDependency: Dependency, MockItYourself {
     
     override func slowAndExpensiveMethod(arg1: String, arg2: Int) -> Double {
         return callHandler.registerCall(args: Args2(arg(arg1), arg(arg2)), defaultReturnValue: 50) as! Double
+    }
+    
+    override func otherSlowMethod() {
+        callHandler.registerMethodCall()
     }
 }
 
@@ -116,6 +124,10 @@ struct ObjectUnderTests {
     func method() -> Double {
         let result = dependency.slowAndExpensiveMethod("A", arg2: 1)
         return result / 2
+    }
+
+    func otherMethod() {
+        dependency.otherSlowMethod()
     }
 }
 
@@ -134,6 +146,11 @@ class MockExampleTests: XCTestCase {
         verify(mockDependency) { self.mockDependency.slowAndExpensiveMethod("A", arg2: 1) }
     }
     
+    func test_did_call_other_slow_method_on_dependency() {
+        let _ = objectUnderTest.otherMethod()
+
+        verify(mockDependency) { self.mockDependency.otherSlowMethod() }
+    }
     func test_method_returns_correct_result_given_dependency_returns_50() {
         stub(mockDependency, andReturnValue: 50) { mockDependency.slowAndExpensiveMethod("A", arg2: 1) }
 
