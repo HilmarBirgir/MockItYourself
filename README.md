@@ -6,7 +6,7 @@
 [![Platform](https://img.shields.io/cocoapods/p/MockItYourself.svg?style=flat)](http://cocoapods.org/pods/MockItYourself)
 
 
-Note: Be aware is the readme for Swift 3.0. See the branch `miy-swift-2.3` for Swift 2.3 documentation.
+Note: Be aware is the readme for Swift 3.0. See the branch `swift-2.3` for Swift 2.3 documentation.
 
 `MockItYourself` is an attempt to create a mocking framework for Swift. Currently, you can't dynamically create classes in Swift and it is therefore impossible to create a powerful mocking framework like [OCMock](http://ocmock.org/). `MockItYourself` is an attempt to reduce the boilerplate needed to manually create mocks.
 
