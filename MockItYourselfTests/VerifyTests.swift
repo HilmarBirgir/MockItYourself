@@ -65,7 +65,7 @@ class VerifyTests: XCTestCase {
     
     func test_can_verify_method_was_called_ignoring_arguments() {
         let arg1 = "arg1"
-        let arg2: Selector = #selector(NSString.appending)
+        let arg2: Selector = #selector(NSString.appending(_:))
         
         mockExample.methodWithArgs2(arg1, arg2: arg2)
         
@@ -86,7 +86,7 @@ class VerifyTests: XCTestCase {
 
     func test_can_verify_method_call_and_check_if_correct_arguments() {
         let arg1 = "arg1"
-        let arg2: Selector = #selector(NSString.appending)
+        let arg2: Selector = #selector(NSString.appending(_:))
 
         
         mockExample.methodWithArgs2(arg1, arg2: arg2)
@@ -96,7 +96,7 @@ class VerifyTests: XCTestCase {
     
     func test_can_verify_method_call_and_check_if_correct_arguments_with_expected_number_of_calls() {
         let arg1 = "arg1"
-        let arg2: Selector = #selector(NSString.appending)
+        let arg2: Selector = #selector(NSString.appending(_:))
         
         mockExample.methodWithArgs2(arg1, arg2: arg2)
         mockExample.methodWithArgs2(arg1, arg2: arg2)
@@ -106,7 +106,7 @@ class VerifyTests: XCTestCase {
     
     func test_asserts_if_checking_if_correct_arguments_with_expected_number_of_calls_if_call_number_mismatch() {
         let arg1 = "arg1"
-        let arg2: Selector = #selector(NSString.appending)
+        let arg2: Selector = #selector(NSString.appending(_:))
         
         mockExample.methodWithArgs2(arg1, arg2: arg2)
         
@@ -122,7 +122,7 @@ class VerifyTests: XCTestCase {
     
     func test_asserts_if_checking_if_correct_arguments_with_expected_number_of_calls_if_one_call_has_different_arguments() {
         let arg1 = "arg1"
-        let arg2: Selector = #selector(NSString.appending)
+        let arg2: Selector = #selector(NSString.appending(_:))
         
         mockExample.methodWithArgs2(arg1, arg2: arg2)
         mockExample.methodWithArgs2("different argument", arg2: arg2)
@@ -147,7 +147,7 @@ class VerifyTests: XCTestCase {
     
     func test_verify_arguments_assert_if_method_is_not_called_at_all() {
         let arg1 = "arg1"
-        let arg2: Selector = #selector(NSString.appending)
+        let arg2: Selector = #selector(NSString.appending(_:))
         
         var success = false
         
@@ -162,7 +162,7 @@ class VerifyTests: XCTestCase {
 
     func test_verify_arguments_asserts_if_arguments_does_not_match() {
         let arg1 = "arg1"
-        let arg2: Selector = #selector(NSString.appending)
+        let arg2: Selector = #selector(NSString.appending(_:))
         
         mockExample.methodWithArgs2("", arg2: arg2)
         
