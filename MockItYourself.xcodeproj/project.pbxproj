@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		022396991E2CECC20009AA75 /* MockItYourself.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2B399F31CE0B76300B3C0FB /* MockItYourself.framework */; };
 		E2B399FC1CE0B76D00B3C0FB /* MockArguments.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2FE3B2B1CDFF1170082B477 /* MockArguments.swift */; };
 		E2B399FD1CE0B76D00B3C0FB /* MockCallHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2FE3B2C1CDFF1170082B477 /* MockCallHandler.swift */; };
 		E2B399FE1CE0B76D00B3C0FB /* MockItYourself.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2FE3B2D1CDFF1170082B477 /* MockItYourself.swift */; };
@@ -52,6 +53,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				022396991E2CECC20009AA75 /* MockItYourself.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
